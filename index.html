@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiniela Mundial 2026 - Registro Eliminatorias</title>
+    <!-- Librería para convertir HTML a Imagen de forma limpia -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
@@ -117,7 +118,6 @@
             color: white;
         }
 
-        /* Botones de Gestión de Usuarios */
         .btn-warning {
             background: #1565c0;
             color: white;
@@ -260,6 +260,7 @@
         <button id="btn-tab-usuarios" class="tab-btn admin-only" onclick="irAPestaña('panel-admin-usuarios')">👥 Control de Usuarios (Admin)</button>
     </div>
 
+    <!-- Pestaña 1: Tabla de Posiciones / Auditoría -->
     <div id="panel-posiciones" class="panel" style="display: block;">
         <h2>Posiciones en Vivo</h2>
         <table>
@@ -277,12 +278,14 @@
         </table>
     </div>
 
+    <!-- Pestaña de Ver Auditoría Pública -->
     <div id="panel-ver-predicciones-publico" class="panel">
         <button class="btn-accion btn-back" onclick="irAPestaña('panel-posiciones')">⬅️ Volver a la Tabla General</button>
         <h2>Predicciones de: <span id="nombre-ver-publico" style="color:var(--primary);">[Nombre]</span></h2>
         <div class="grid-grupos" id="grid-ver-publico"></div>
     </div>
 
+    <!-- Pestaña 2: Registro Público de Usuarios -->
     <div id="panel-registro" class="panel">
         <h2>Ingresa tus Pronósticos</h2>
         <p style="text-align:center; color:#d32f2f; font-size:14px; margin-bottom: 20px; font-weight: bold;">⚠️ NOTA: No se permiten empates. Debes definir un ganador obligatorio en el marcador.</p>
@@ -296,12 +299,14 @@
         <button class="btn-accion" onclick="guardarPrediccionesUsuarioComun()">💾 Guardar y Generar Imagen de Respaldo</button>
     </div>
 
+    <!-- Pantalla de Éxito y Generación de Imagen -->
     <div id="panel-exito" class="panel" style="text-align: center;">
         <h2 style="color: #2e7d32;">✅ ¡Pronósticos Registrados con Éxito!</h2>
         <p>A continuación se generó tu comprobante oficial. Descárgalo y envíalo al grupo de WhatsApp.</p>
         
         <button id="btn-descargar-foto" class="btn-accion" style="background:#2e7d32; color:white; max-width:400px; margin:0 auto 20px auto;">📥 Descargar Imagen Comprobante</button>
         
+        <!-- Recibo Visual Completo para Captura -->
         <div id="recibo-visual-whatsapp" style="background: #ffffff; padding: 25px; border: 3px solid #004d40; border-radius: 12px; max-width: 480px; margin: 0 auto; text-align: left; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
             <div style="text-align: center; border-bottom: 2px dashed #004d40; padding-bottom: 10px; margin-bottom: 15px;">
                 <h3 style="margin: 5px 0; color: #004d40;">RESPALDO OFICIAL DE QUINIELA</h3>
@@ -314,16 +319,28 @@
         <button class="btn-accion btn-back" onclick="irAInicioLimpiando()" style="margin-top: 30px; max-width: 300px;">🏠 Volver al Inicio</button>
     </div>
 
+    <!-- Pestaña 3: Configuración Organizador (Admin) -->
     <div id="panel-resultados" class="panel">
         <h2>Configurar Encuentros y Resultados Oficiales</h2>
         <div class="grid-grupos" id="grid-resultados-reales"></div>
         <button class="btn-accion" onclick="guardarResultadosReales()">💾 Guardar Configuraciones y Resultados</button>
     </div>
 
+    <!-- Pestaña 4: Control y Modificación de Usuarios (Admin) -->
     <div id="panel-admin-usuarios" class="panel">
         <h2>Panel de Control: Gestión de Participantes</h2>
-        <p style="text-align:center; color:#555;">Modifica nombres o elimina registros duplicados directamente de la base de datos.</p>
-        <table>
+        
+        <!-- Zona de Cierre de Inscripciones -->
+        <div style="background: #fff3e0; border: 2px solid #ffb300; padding: 15px; border-radius: 10px; margin-bottom: 25px; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
+            <h3 style="margin-top:0; color:#e65100; text-transform: uppercase; font-size: 16px;">🔒 Cierre de Inscripciones</h3>
+            <p style="margin: 5px 0 15px 0; font-size:13px; color: #555;">Activa esta casilla cuando ya estén listos todos los jugadores. Esto ocultará de inmediato el botón de registro al público general.</p>
+            <label style="font-weight: bold; font-size: 15px; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; background: white; padding: 10px 15px; border-radius: 6px; border: 1px solid #ffb300;">
+                <input type="checkbox" id="chk-ocultar-registro" onchange="toggleVisibilidadRegistro()" style="transform: scale(1.3); cursor: pointer;"> 
+                Ocultar pestaña "Registrar Mis Pronósticos"
+            </label>
+        </div>
+
+        <table style="margin-top: 10px;">
             <thead>
                 <tr>
                     <th>ID Registro</th>
@@ -332,11 +349,13 @@
                 </tr>
             </thead>
             <tbody id="tabla-gestion-usuarios-body">
-                </tbody>
+                <!-- Inyección dinámica -->
+            </tbody>
         </table>
     </div>
 </div>
 
+<!-- Zona Login Administrador -->
 <div class="admin-lock-zone">
     <div id="login-admin-box">
         <label style="font-weight: bold; margin-right: 10px;">Modo Organizador:</label>
@@ -354,13 +373,28 @@
     const ENDPOINT_NUBE = "https://kvdb.io/M7g1jxKHWEg4HC4Jy9nMs8/datos_quiniela_eliminatorias";
 
     const TOTAL_PARTIDOS = 16;
-    let datosApp = { participantes: [], llaves: [] };
+    let datosApp = { participantes: [], llaves: [], registroOculto: false };
 
     function inicializarEstructura() {
         if (!datosApp.llaves || datosApp.llaves.length === 0) {
             datosApp.llaves = Array.from({length: TOTAL_PARTIDOS}, (_, i) => ({
                 id: i, eqA: "", eqB: "", rGolesA: "", rGolesB: "", rGanador: ""
             }));
+        }
+        if (datosApp.registroOculto === undefined) {
+            datosApp.registroOculto = false;
+        }
+    }
+
+    function aplicarFiltroBotonRegistro() {
+        const btnTabRegistro = document.getElementById('btn-tab-registro');
+        if (datosApp.registroOculto) {
+            btnTabRegistro.style.display = 'none';
+            if (document.getElementById('panel-registro').style.display === 'block') {
+                irAPestaña('panel-posiciones');
+            }
+        } else {
+            btnTabRegistro.style.display = 'inline-block';
         }
     }
 
@@ -383,6 +417,7 @@
         }
         if (panelId === 'panel-admin-usuarios') {
             document.getElementById('btn-tab-usuarios').classList.add('active');
+            document.getElementById('chk-ocultar-registro').checked = !!datosApp.registroOculto;
             generarTablaGestionUsuarios();
         }
     }
@@ -401,6 +436,7 @@
         } catch (e) { console.log("Espacio nuevo listo."); }
         
         inicializarEstructura();
+        aplicarFiltroBotonRegistro();
         mostrarCargando(false);
         calcularYMostrarTabla();
     }
@@ -456,6 +492,18 @@
         } else {
             txtStatus.innerText = `🟢 Avanza: ${nameB}`;
             txtStatus.style.color = "#2e7d32";
+        }
+    }
+
+    // --- Módulo Organizador: Control del botón registro ---
+    async function toggleVisibilidadRegistro() {
+        datosApp.registroOculto = document.getElementById('chk-ocultar-registro').checked;
+        await subirDatosALaNube();
+        aplicarFiltroBotonRegistro();
+        if (datosApp.registroOculto) {
+            alert("🔒 Registros Cerrados: El botón ya NO es visible para el público.");
+        } else {
+            alert("🔓 Registros Abiertos: El botón vuelve a ser visible.");
         }
     }
 
@@ -545,7 +593,7 @@
         if (!p) return;
         
         let nuevoNombre = prompt("Modificar el nombre del participante:", p.nombre);
-        if (nuevoNombre === null) return; // Si el admin cancela la ventana
+        if (nuevoNombre === null) return;
         nuevoNombre = nuevoNombre.trim();
         
         if (!nuevoNombre) return alert("⚠️ El nombre no puede estar en blanco.");
@@ -593,6 +641,10 @@
     }
 
     async function guardarPrediccionesUsuarioComun() {
+        if (datosApp.registroOculto) {
+            return alert("🔒 Lo sentimos, las inscripciones para esta quiniela ya se encuentran cerradas.");
+        }
+
         const nombreInput = document.getElementById('usuario-nombre-registro');
         const nombre = nombreInput.value.trim();
         
@@ -621,6 +673,11 @@
                 if (json && json.participantes) datosApp = json;
             }
         } catch (e) {}
+
+        if (datosApp.registroOculto) {
+            mostrarCargando(false);
+            return alert("🔒 Las inscripciones se cerraron mientras completabas el formulario.");
+        }
 
         let misPredicciones = [];
         for (let i = 0; i < TOTAL_PARTIDOS; i++) {
