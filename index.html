@@ -167,7 +167,7 @@
             text-transform: uppercase;
         }
 
-        input[type="number"], input[type="text"] {
+        input[type="number"], input[type="text"], select {
             padding: 8px;
             border-radius: 6px;
             border: 2px solid #cbd5e1;
@@ -178,7 +178,7 @@
         }
         
         input[type="number"] { text-align: center; font-weight: bold; }
-        input:focus { border-color: var(--primary); }
+        input:focus, select:focus { border-color: var(--primary); }
 
         .match-row {
             display: flex;
@@ -186,7 +186,7 @@
             justify-content: center;
             gap: 8px;
             margin-top: 15px;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         .status-avanza {
@@ -288,7 +288,7 @@
     <!-- Pestaña 2: Registro Público de Usuarios -->
     <div id="panel-registro" class="panel">
         <h2>Ingresa tus Pronósticos</h2>
-        <p style="text-align:center; color:#d32f2f; font-size:14px; margin-bottom: 20px; font-weight: bold;">⚠️ NOTA: No se permiten empates. Debes definir un ganador obligatorio en el marcador.</p>
+        <p style="text-align:center; color:#0284c7; font-size:14px; margin-bottom: 20px; font-weight: bold;">ℹ️ NOTA: Se permiten empates en los 90 minutos de tiempo regular, pero debes elegir obligatoriamente quién clasifica.</p>
         
         <div style="background: #eef2ff; padding: 15px; border-radius: 8px; border: 1px solid #cbd5e1; margin-bottom: 20px;">
             <label style="font-weight: bold; display: block; margin-bottom: 5px; color: var(--primary);">👤 Tu Nombre Completo:</label>
@@ -471,9 +471,15 @@
         let gA = document.getElementById(`${tipo}-golesA-${i}`).value;
         let gB = document.getElementById(`${tipo}-golesB-${i}`).value;
         let txtStatus = document.getElementById(`${tipo}-status-${i}`);
+        let selectorGanador = document.getElementById(`${tipo}-ganador-${i}`);
         
         let nameA = tipo === 'public' ? datosApp.llaves[i].eqA : (document.getElementById(`admin-eqA-${i}`).value || "Local");
         let nameB = tipo === 'public' ? datosApp.llaves[i].eqB : (document.getElementById(`admin-eqB-${i}`).value || "Visitante");
+
+        if (tipo === 'admin' && selectorGanador) {
+            selectorGanador.options[1].text = nameA || "Local";
+            selectorGanador.options[2].text = nameB || "Visitante";
+        }
 
         if (gA === "" || gB === "") {
             txtStatus.innerText = "";
@@ -484,14 +490,16 @@
         let nB = parseInt(gB);
 
         if (nA === nB) {
-            txtStatus.innerText = "⚠️ ¡No se permiten empates!";
-            txtStatus.style.color = "#c62828";
+            txtStatus.innerText = "⚖️ Empate en 90 min. ¡Elige quién clasifica!";
+            txtStatus.style.color = "#d97706";
         } else if (nA > nB) {
             txtStatus.innerText = `🟢 Avanza: ${nameA}`;
             txtStatus.style.color = "#2e7d32";
+            if (selectorGanador) selectorGanador.value = "A";
         } else {
             txtStatus.innerText = `🟢 Avanza: ${nameB}`;
             txtStatus.style.color = "#2e7d32";
+            if (selectorGanador) selectorGanador.value = "B";
         }
     }
 
@@ -515,7 +523,11 @@
             let textoInicial = "";
             if(llave.rGolesA !== "" && llave.rGolesB !== "") {
                 let nA = parseInt(llave.rGolesA); let nB = parseInt(llave.rGolesB);
-                textoInicial = nA === nB ? "⚠️ ¡No se permiten empates!" : `🟢 Avanza: ${nA > nB ? (llave.eqA||'Local') : (llave.eqB||'Visitante')}`;
+                if (nA === nB) {
+                    textoInicial = "⚖️ Empate en 90 min. ¡Elige quién clasifica!";
+                } else {
+                    textoInicial = `🟢 Avanza: ${nA > nB ? (llave.eqA||'Local') : (llave.eqB||'Visitante')}`;
+                }
             }
 
             contenedor.innerHTML += `
@@ -531,6 +543,14 @@
                         <span>vs</span>
                         <input type="number" id="admin-golesB-${i}" class="score-box" value="${llave.rGolesB}" min="0" oninput="calcularGanadorEnVivo(${i}, 'admin')">
                     </div>
+                    <div style="margin-bottom:10px; display:flex; flex-direction:column; gap:2px;">
+                        <label style="font-size:12px; font-weight:bold; color:var(--primary);">🏆 Clasifica Oficial:</label>
+                        <select id="admin-ganador-${i}">
+                            <option value="">-- Seleccionar --</option>
+                            <option value="A" ${llave.rGanador === 'A' ? 'selected' : ''}>${llave.eqA || 'Local'}</option>
+                            <option value="B" ${llave.rGanador === 'B' ? 'selected' : ''}>${llave.eqB || 'Visitante'}</option>
+                        </select>
+                    </div>
                     <div id="admin-status-${i}" class="status-avanza" style="color: #2e7d32;">${textoInicial}</div>
                 </div>`;
         });
@@ -540,10 +560,21 @@
         for (let i = 0; i < TOTAL_PARTIDOS; i++) {
             let gA = document.getElementById(`admin-golesA-${i}`).value;
             let gB = document.getElementById(`admin-golesB-${i}`).value;
+            let ganadorSeleccionado = document.getElementById(`admin-ganador-${i}`).value;
 
             if (gA !== "" && gB !== "") {
-                if (parseInt(gA) === parseInt(gB)) {
-                    alert(`⚠️ El partido ${i+1} no puede quedar empatado. Define un ganador oficial.`);
+                if (ganadorSeleccionado === "") {
+                    alert(`⚠️ Por favor selecciona quién clasifica oficialmente en el Emparejamiento ${i+1}.`);
+                    return;
+                }
+                let nA = parseInt(gA);
+                let nB = parseInt(gB);
+                if (nA > nB && ganadorSeleccionado !== 'A') {
+                    alert(`⚠️ Consistencia: En el Emparejamiento ${i+1} el equipo local tiene más goles, por lo tanto debe clasificar.`);
+                    return;
+                }
+                if (nA < nB && ganadorSeleccionado !== 'B') {
+                    alert(`⚠️ Consistencia: En el Emparejamiento ${i+1} el equipo visitante tiene más goles, por lo tanto debe clasificar.`);
                     return;
                 }
             }
@@ -555,7 +586,7 @@
             llave.rGolesA = document.getElementById(`admin-golesA-${i}`).value;
             llave.rGolesB = document.getElementById(`admin-golesB-${i}`).value;
             if (llave.rGolesA !== "" && llave.rGolesB !== "") {
-                llave.rGanador = parseInt(llave.rGolesA) > parseInt(llave.rGolesB) ? 'A' : 'B';
+                llave.rGanador = document.getElementById(`admin-ganador-${i}`).value;
             } else {
                 llave.rGanador = "";
             }
@@ -635,6 +666,14 @@
                         <input type="number" id="public-golesB-${i}" class="score-box" min="0" placeholder="0" oninput="calcularGanadorEnVivo(${i}, 'public')">
                         <span class="team-label right">${nombreEqB}</span>
                     </div>
+                    <div style="margin-bottom:5px; display:flex; flex-direction:column; gap:2px;">
+                        <label style="font-size:12px; font-weight:bold; color:var(--primary); text-align:center;">🏆 Clasifica a la Siguiente Ronda:</label>
+                        <select id="public-ganador-${i}">
+                            <option value="">-- Seleccionar --</option>
+                            <option value="A">${nombreEqA}</option>
+                            <option value="B">${nombreEqB}</option>
+                        </select>
+                    </div>
                     <div id="public-status-${i}" class="status-avanza"></div>
                 </div>`;
         });
@@ -653,6 +692,7 @@
         for (let i = 0; i < TOTAL_PARTIDOS; i++) {
             let gA = document.getElementById(`public-golesA-${i}`).value;
             let gB = document.getElementById(`public-golesB-${i}`).value;
+            let gan = document.getElementById(`public-ganador-${i}`).value;
             let nEqA = datosApp.llaves[i].eqA || "Local";
             let nEqB = datosApp.llaves[i].eqB || "Visitante";
 
@@ -660,8 +700,17 @@
                 return alert(`⚠️ Te falta rellenar el marcador del Partido ${i + 1} (${nEqA} vs ${nEqB}).`);
             }
 
-            if (parseInt(gA) === parseInt(gB)) {
-                return alert(`⚠️ ¡Empate detectado en Partido ${i + 1}! En esta fase debes asignar un ganador forzoso en los goles (ej. 2-1 o 0-1).`);
+            if (gan === "") {
+                return alert(`⚠️ Por favor selecciona quién clasifica en el Partido ${i + 1} (${nEqA} vs ${nEqB}).`);
+            }
+
+            let nA = parseInt(gA);
+            let nB = parseInt(gB);
+            if (nA > nB && gan !== 'A') {
+                return alert(`⚠️ Inconsistencia en el Partido ${i + 1}: Pronosticaste ganador a ${nEqA} en goles, por lo tanto debe ser quien clasifique.`);
+            }
+            if (nA < nB && gan !== 'B') {
+                return alert(`⚠️ Inconsistencia en el Partido ${i + 1}: Pronosticaste ganador a ${nEqB} en goles, por lo tanto debe ser quien clasifique.`);
             }
         }
 
@@ -683,10 +732,11 @@
         for (let i = 0; i < TOTAL_PARTIDOS; i++) {
             let gA = document.getElementById(`public-golesA-${i}`).value;
             let gB = document.getElementById(`public-golesB-${i}`).value;
+            let gan = document.getElementById(`public-ganador-${i}`).value;
             misPredicciones.push({
                 pGolesA: gA,
                 pGolesB: gB,
-                pGanador: parseInt(gA) > parseInt(gB) ? 'A' : 'B'
+                pGanador: gan
             });
         }
 
@@ -718,7 +768,7 @@
                         <span style="color:#777;">vs</span>
                         <span>(${pred.pGolesB}) ${nEqB}</span>
                     </div>
-                    <div style="color:#004d40; font-size:11px; text-align:center; margin-top:2px;">Avanza: <strong>${ganadorTexto}</strong></div>
+                    <div style="color:#004d40; font-size:11px; text-align:center; margin-top:2px;">Clasifica: <strong>${ganadorTexto}</strong></div>
                 </div>`;
         });
 
@@ -741,19 +791,28 @@
         descargarDatosDeLaNube();
     }
 
-    // --- Sistema Analítico de Asignación de Puntos ---
+    // --- Sistema Analítico de Asignación de Puntos de Doble Criterio ---
     function calcularPuntosLlave(pred, llave) {
-        if (!llave.rGanador) return 0;
-        if (pred.pGanador !== llave.rGanador) return 0; 
+        if (llave.rGolesA === "" || llave.rGolesB === "" || !llave.rGanador) return 0;
 
+        // Criterio 1: Adivinar quién pasa a la siguiente fase
+        let aciertaClasificado = (pred.pGanador === llave.rGanador);
+
+        // Criterio 2: Adivinar el resultado exacto en los 90 minutos de tiempo regular
         let pA = parseInt(pred.pGolesA);
         let pB = parseInt(pred.pGolesB);
         let rA = parseInt(llave.rGolesA);
         let rB = parseInt(llave.rGolesB);
+        let aciertaMarcador90Min = (pA === rA && pB === rB);
 
-        if (pA === rA && pB === rB) return 3;
+        // Sistema de recompensas:
+        if (aciertaClasificado && aciertaMarcador90Min) {
+            return 3; // Acierta ambos ítems
+        } else if (aciertaClasificado || aciertaMarcador90Min) {
+            return 1; // Solo adivina 1 de los 2
+        }
 
-        return 1; 
+        return 0; // No acertó nada
     }
 
     function verPrediccionesPublicas(id) {
@@ -778,12 +837,12 @@
                     
                     <div style="background: #eef2ff; padding: 10px; border-radius: 6px; font-size: 13px; margin-bottom: 8px; text-align:center;">
                         <strong>🏆 Oficial:</strong> ${nEqA} ${llave.rGolesA !== "" ? llave.rGolesA : '-'} - ${llave.rGolesB !== "" ? llave.rGolesB : '-'} ${nEqB}
-                        <br><strong>Pasa:</strong> ${nombreGanadorReal}
+                        <br><strong>Clasifica:</strong> ${nombreGanadorReal}
                     </div>
                     
                     <div style="font-size: 13px; background: #fff; padding: 8px; border: 1px solid #ddd; border-radius: 6px; text-align:center;">
                         <strong>👤 Pronóstico:</strong> ${nEqA} ${pred.pGolesA !== "" ? pred.pGolesA : '-'} - ${pred.pGolesB !== "" ? pred.pGolesB : '-'} ${nEqB}
-                        <br><strong>Pasa:</strong> ${nombreGanadorPred}
+                        <br><strong>Clasifica:</strong> ${nombreGanadorPred}
                         <hr style="border:0; border-top:1px dotted #ccc; margin:5px 0;">
                         <span style="font-weight:bold; color:var(--primary); font-size:14px;">Puntos: ${pts} pts</span>
                     </div>
