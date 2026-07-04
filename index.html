@@ -3,6 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- ETIQUETAS ANTI-CACHÉ: Obligan al celular a bajar la versión más nueva siempre -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
     <title>Quiniela Mundial 2026 - Recta Final</title>
     <!-- Librería para convertir HTML a Imagen -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -15,270 +21,44 @@
             --text: #333333;
         }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .container {
-            max-width: 900px;
-            width: 100%;
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            box-sizing: border-box;
-            margin-bottom: 20px;
-        }
-
-        h1, h2 {
-            text-align: center;
-            color: var(--primary);
-            text-transform: uppercase;
-            margin-top: 5px;
-        }
-
-        .tabs {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
-        }
-
-        .tab-btn {
-            padding: 12px 20px;
-            border: none;
-            background: #e2e8f0;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 15px;
-            transition: 0.3s;
-            color: #4a5568;
-        }
-
-        .tab-btn.active {
-            background: var(--primary);
-            color: white;
-        }
-
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
+        .container { max-width: 900px; width: 100%; background: var(--card-bg); padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); box-sizing: border-box; margin-bottom: 20px; }
+        h1, h2 { text-align: center; color: var(--primary); text-transform: uppercase; margin-top: 5px; }
+        .tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; }
+        .tab-btn { padding: 12px 20px; border: none; background: #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 15px; transition: 0.3s; color: #4a5568; }
+        .tab-btn.active { background: var(--primary); color: white; }
         .panel { display: none; }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        th, td {
-            padding: 14px 12px;
-            text-align: center;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        th {
-            background-color: var(--primary);
-            color: white;
-            font-size: 15px;
-            text-transform: uppercase;
-        }
-
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; border-radius: 8px; overflow: hidden; }
+        th, td { padding: 14px 12px; text-align: center; border-bottom: 1px solid #e0e0e0; }
+        th { background-color: var(--primary); color: white; font-size: 15px; text-transform: uppercase; }
         tr:hover { background-color: #fcfcfc; }
-
-        .puntos-total {
-            font-weight: bold;
-            color: #2e7d32;
-            font-size: 18px;
-        }
-
-        .btn-ver-publico {
-            background: #e2e8f0;
-            color: var(--primary);
-            border: 1px solid var(--primary);
-            padding: 6px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 13px;
-            transition: 0.2s;
-        }
-
-        .btn-ver-publico:hover {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-warning {
-            background: #1565c0;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            margin-right: 5px;
-        }
-        .btn-warning:hover { background: #0d47a1; }
-
-        .btn-danger {
-            background: #c62828;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .btn-danger:hover { background: #b71c1c; }
-
-        .grid-grupos {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 15px;
-        }
-
-        .group-card {
-            background: #fafafa;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 15px;
-            box-sizing: border-box;
-            position: relative;
-        }
-
-        .group-header {
-            background: var(--primary);
-            color: white;
-            padding: 10px;
-            border-radius: 6px;
-            margin-top: 0;
-            text-align: center;
-            font-size: 16px;
-            text-transform: uppercase;
-        }
-
-        input[type="number"], input[type="text"], select {
-            padding: 8px;
-            border-radius: 6px;
-            border: 2px solid #cbd5e1;
-            font-size: 14px;
-            outline: none;
-            width: 100%;
-            box-sizing: border-box;
-        }
+        .puntos-total { font-weight: bold; color: #2e7d32; font-size: 18px; }
         
-        input[type="number"] { text-align: center; font-weight: bold; }
-        input:focus, select:focus { border-color: var(--primary); }
-
-        .match-row {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 15px;
-            margin-bottom: 10px;
-        }
-
-        .status-avanza {
-            font-size: 13px;
-            font-weight: bold;
-            text-align: center;
-            min-height: 18px;
-            margin-top: 5px;
-        }
-
-        .btn-accion {
-            display: block;
-            width: 100%;
-            padding: 14px;
-            background-color: var(--secondary);
-            color: #000;
-            font-size: 16px;
-            font-weight: bold;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            text-transform: uppercase;
-            transition: 0.3s;
-            margin-top: 20px;
-        }
-
+        .btn-accion { display: block; width: 100%; padding: 14px; background-color: var(--secondary); color: #000; font-size: 16px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; text-transform: uppercase; transition: 0.3s; margin-top: 20px; }
         .btn-accion:hover { background-color: #ffa000; }
         .btn-back { background-color: #718096; color: white; margin-bottom: 20px; }
-        .btn-back:hover { background-color: #4a5568; }
-
-        .loading-bar {
-            background: #d97706;
-            color: white;
-            text-align: center;
-            padding: 10px;
-            font-weight: bold;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            display: none;
-        }
-
-        .admin-lock-zone {
-            text-align: center;
-            margin-top: 40px;
-            padding: 20px;
-            border-top: 2px dashed #cbd5e1;
-            width: 100%;
-            max-width: 900px;
-            box-sizing: border-box;
-        }
-
+        .btn-danger { background: #c62828; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .btn-ver-publico { background: #e2e8f0; color: var(--primary); border: 1px solid var(--primary); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; transition: 0.2s; }
+        
+        .grid-grupos { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 15px; }
+        .group-card { background: #fafafa; border: 1px solid #e0e0e0; border-radius: 8px; padding: 15px; box-sizing: border-box; position: relative; }
+        .group-header { background: var(--primary); color: white; padding: 10px; border-radius: 6px; margin-top: 0; text-align: center; font-size: 16px; text-transform: uppercase; }
+        
+        input[type="number"], input[type="text"], select { padding: 8px; border-radius: 6px; border: 2px solid #cbd5e1; font-size: 14px; outline: none; width: 100%; box-sizing: border-box; }
+        input[type="number"] { text-align: center; font-weight: bold; }
+        input:focus, select:focus { border-color: var(--primary); }
+        .score-box { width: 60px !important; flex-shrink: 0; }
+        .match-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 15px; margin-bottom: 10px; }
+        
+        .admin-lock-zone { text-align: center; margin-top: 40px; padding: 20px; border-top: 2px dashed #cbd5e1; width: 100%; max-width: 900px; box-sizing: border-box; }
         .admin-only { display: none; }
         
-        .score-box { width: 55px !important; flex-shrink: 0; }
-        .team-label { width: 35%; font-weight: bold; font-size: 13px; color: #222; }
-        .team-label.left { text-align: right; }
-        .team-label.right { text-align: left; }
-        
-        .candado-box {
-            background: #fff3e0;
-            border: 1px solid #ffb300;
-            padding: 8px;
-            border-radius: 6px;
-            margin-top: 15px;
-            text-align: center;
-            font-weight: bold;
-            font-size: 13px;
-            color: #e65100;
-            cursor: pointer;
-        }
-
-        .selector-fase-contenedor {
-            background: #eef2ff;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid #cbd5e1;
-            text-align: center;
-            margin-bottom: 15px;
-        }
-        
-        .bono-tag {
-            display: inline-block;
-            background: #ffecb3;
-            color: #f57f17;
-            font-size: 11px;
-            font-weight: bold;
-            padding: 2px 6px;
-            border-radius: 4px;
-            margin-top: 4px;
-            border: 1px solid #fbc02d;
-        }
+        /* Estilos del Simulador */
+        .simulador-box { background: #e0f2fe; border: 1px solid #38bdf8; border-radius: 10px; padding: 20px; margin-bottom: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .simulador-title { color: #0369a1; text-align: center; margin-top: 0; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .badge-exacto { display: inline-block; background: #16a34a; color: white; padding: 4px 10px; border-radius: 12px; font-size: 13px; font-weight: bold; margin: 3px; }
+        .badge-parcial { display: inline-block; background: #d97706; color: white; padding: 4px 10px; border-radius: 12px; font-size: 13px; font-weight: bold; margin: 3px; }
+        .team-label { width: 35%; font-weight: bold; font-size: 13px; color: #222; text-align: center; }
     </style>
 </head>
 <body>
@@ -286,20 +66,50 @@
 <div class="container">
     <h1>🏆 Quiniela: Recta Final 🏆</h1>
     
-    <div id="loading" class="loading-bar">⏳ Conectando con la base de datos...</div>
+    <div id="loading" style="background: #d97706; color: white; text-align: center; padding: 10px; font-weight: bold; border-radius: 6px; margin-bottom: 15px; display: none;">⏳ Cargando datos en vivo...</div>
     
     <div class="tabs">
-        <button id="btn-tab-posiciones" class="tab-btn active" onclick="irAPestaña('panel-posiciones')">📊 Tabla de Posiciones</button>
-        <button id="btn-tab-registro" class="tab-btn" onclick="irAPestaña('panel-registro')">📝 Registrar Mis Pronósticos</button>
-        <button id="btn-tab-resultados" class="tab-btn admin-only" onclick="irAPestaña('panel-resultados')">⚙️ Configurar Partidos (Admin)</button>
-        <button id="btn-tab-usuarios" class="tab-btn admin-only" onclick="irAPestaña('panel-admin-usuarios')">👥 Control de Usuarios (Admin)</button>
+        <button id="btn-tab-posiciones" class="tab-btn active" onclick="irAPestaña('panel-posiciones')">📊 Tabla y Simulador</button>
+        <button id="btn-tab-registro" class="tab-btn" onclick="irAPestaña('panel-registro')">📝 Mis Pronósticos</button>
+        <button id="btn-tab-resultados" class="tab-btn admin-only" onclick="irAPestaña('panel-resultados')">⚙️ Configurar Partidos</button>
+        <button id="btn-tab-usuarios" class="tab-btn admin-only" onclick="irAPestaña('panel-admin-usuarios')">👥 Usuarios</button>
     </div>
 
-    <!-- Pestaña 1: Tabla de Posiciones / Auditoría -->
+    <!-- PANEL PRINCIPAL -->
     <div id="panel-posiciones" class="panel" style="display: block;">
         
-        <div class="selector-fase-contenedor">
-            <label style="font-weight:bold; color:var(--primary); font-size: 16px;">🏆 Selecciona la Ronda a visualizar: </label>
+        <!-- ========================================== -->
+        <!-- SIMULADOR / FILTRO INTERACTIVO PÚBLICO     -->
+        <!-- ========================================== -->
+        <div class="simulador-box">
+            <h3 class="simulador-title">🔍 Simulador en Vivo</h3>
+            <p style="font-size: 14px; text-align: center; color: #0284c7; margin-bottom: 15px; font-weight: 500;">Selecciona un partido, ingresa cómo va el marcador real y mira quiénes están ganando puntos al instante.</p>
+            
+            <div style="display: flex; flex-direction: column; gap: 15px; align-items: center; background: white; padding: 15px; border-radius: 8px;">
+                <select id="simulador-select-partido" style="max-width: 500px; font-weight: bold; font-size: 15px;" onchange="ejecutarSimulador()"></select>
+                
+                <div class="match-row" style="margin: 0;">
+                    <input type="number" id="simulador-goles-a" placeholder="Goles" class="score-box" oninput="ejecutarSimulador()">
+                    <span style="font-weight: bold; font-size: 18px;">-</span>
+                    <input type="number" id="simulador-goles-b" placeholder="Goles" class="score-box" oninput="ejecutarSimulador()">
+                </div>
+
+                <div style="width: 100%; max-width: 300px;">
+                    <label style="font-size:12px; font-weight:bold; color:var(--primary); text-align:center; display:block; margin-bottom:5px;">🏆 Equipo que avanzaría (En caso de empate):</label>
+                    <select id="simulador-ganador" onchange="ejecutarSimulador()">
+                        <option value="">-- Se calcula por goles --</option>
+                        <option value="A">Local</option>
+                        <option value="B">Visitante</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="simulador-resultados" style="margin-top: 15px; display: none;"></div>
+        </div>
+        <!-- ========================================== -->
+
+        <div style="background: #eef2ff; padding: 15px; border-radius: 8px; border: 1px solid #cbd5e1; text-align: center; margin-bottom: 15px;">
+            <label style="font-weight:bold; color:var(--primary); font-size: 16px;">🏆 Tabla de Posiciones por Fase: </label>
             <select id="select-fase-posiciones" onchange="calcularYMostrarTabla()" style="width:auto; display:inline-block; font-weight:bold; font-size: 15px; margin-left: 10px;"></select>
         </div>
 
@@ -308,7 +118,7 @@
                 <tr>
                     <th>Pos.</th>
                     <th>Participante</th>
-                    <th>Puntos (Esta Ronda)</th>
+                    <th>Puntos</th>
                     <th>Auditoría</th>
                 </tr>
             </thead>
@@ -318,136 +128,120 @@
         </table>
     </div>
 
-    <!-- Pestaña de Ver Auditoría Pública -->
+    <!-- PANEL AUDITORÍA PÚBLICA -->
     <div id="panel-ver-predicciones-publico" class="panel">
-        <button class="btn-accion btn-back" onclick="irAPestaña('panel-posiciones')">⬅️ Volver a la Tabla General</button>
+        <button class="btn-accion btn-back" onclick="irAPestaña('panel-posiciones')">⬅️ Volver a la Tabla</button>
         <h2>Pronósticos de: <span id="nombre-ver-publico" style="color:var(--primary);">[Nombre]</span></h2>
-        <p style="text-align:center; font-weight:bold; color:#d97706;" id="titulo-fase-publico"></p>
-        
-        <div id="contenedor-bonos-auditoria" style="text-align:center; margin-bottom:15px; font-size:14px;"></div>
-        
         <div class="grid-grupos" id="grid-ver-publico"></div>
     </div>
 
-    <!-- Pestaña 2: Registro Público de Usuarios -->
+    <!-- PANEL DE REGISTRO -->
     <div id="panel-registro" class="panel">
         <h2>Ingresa tus Pronósticos</h2>
-        <p style="text-align:center; color:#0284c7; font-size:14px; margin-bottom: 20px; font-weight: bold;">ℹ️ NOTA: Cada fase es independiente y tiene su propio ganador. Tus puntos NO se acumularán con los de rondas anteriores.</p>
-        
         <div style="background: #eef2ff; padding: 15px; border-radius: 8px; border: 1px solid #cbd5e1; margin-bottom: 20px;">
             <label style="font-weight: bold; display: block; margin-bottom: 5px; color: var(--primary);">👤 Tu Nombre Completo:</label>
             <input type="text" id="usuario-nombre-registro" placeholder="Ej. Juan Pérez">
         </div>
-
         <div class="grid-grupos" id="grid-registro-publico"></div>
-        <button class="btn-accion" id="btn-guardar-pronosticos" onclick="guardarPrediccionesUsuarioComun()">💾 Guardar y Generar Comprobante</button>
+        <button class="btn-accion" id="btn-guardar-pronosticos" onclick="guardarPrediccionesUsuarioComun()">💾 Guardar Predicciones</button>
     </div>
 
-    <!-- Pantalla de Éxito y Generación de Imagen -->
-    <div id="panel-exito" class="panel" style="text-align: center;">
-        <h2 style="color: #2e7d32;">✅ ¡Pronósticos Registrados con Éxito!</h2>
-        <p>A continuación se generó tu comprobante oficial de esta ronda.</p>
-        
-        <button id="btn-descargar-foto" class="btn-accion" style="background:#2e7d32; color:white; max-width:400px; margin:0 auto 20px auto;">📥 Descargar Imagen Comprobante</button>
-        
-        <div id="recibo-visual-whatsapp" style="background: #ffffff; padding: 25px; border: 3px solid #004d40; border-radius: 12px; max-width: 480px; margin: 0 auto; text-align: left; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
-            <div style="text-align: center; border-bottom: 2px dashed #004d40; padding-bottom: 10px; margin-bottom: 15px;">
-                <h3 style="margin: 5px 0; color: #004d40;">RESPALDO DE QUINIELA</h3>
-                <p style="margin: 2px 0; font-size: 14px; font-weight: bold;">Participante: <span id="recibo-nombre" style="color: #d97706;">-</span></p>
-                <span style="font-size: 11px; color: #777;" id="recibo-fase-activa">Ronda Activa - Copia Inalterable</span>
-            </div>
-            <div id="recibo-lista-partidos"></div>
-            <div id="recibo-campeon-profetizado"></div>
-        </div>
-
-        <button class="btn-accion btn-back" onclick="irAInicioLimpiando()" style="margin-top: 30px; max-width: 300px;">🏠 Volver al Inicio</button>
-    </div>
-
-    <!-- Pestaña 3: Configuración Organizador (Admin) -->
+    <!-- PANEL ADMIN RESULTADOS -->
     <div id="panel-resultados" class="panel">
-        <h2>Gestión de Fases y Partidos</h2>
-        
-        <div style="background: #eef2ff; border: 2px solid #0284c7; padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center;">
-            <h3 style="margin-top:0; color:#0284c7;">Añadir Rondas</h3>
-            <p style="font-size:13px; color:#555;"><strong>⚠️ IMPORTANTE:</strong> Para activar los bonos automáticos, debes escribir la Etiqueta de Fase exactamente como <strong>"Semifinales"</strong> o <strong>"Final"</strong>.</p>
-            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 15px;">
-                <button class="btn-accion" style="width:auto; margin:0; background:#2e7d32; color:white;" onclick="agregarPartidoAdmin()">➕ Agregar Partido</button>
-                <button class="btn-accion" style="width:auto; margin:0; background:#c62828; color:white;" onclick="eliminarPartidoAdmin()">➖ Borrar Último</button>
-            </div>
+        <h2>Configurar Partidos y Marcadores Reales</h2>
+        <div style="text-align:center; margin-bottom: 15px;">
+            <button class="btn-accion" style="width:auto; display:inline-block; background:#2e7d32; color:white;" onclick="agregarPartidoAdmin()">➕ Agregar Partido</button>
+            <button class="btn-accion" style="width:auto; display:inline-block; background:#c62828; color:white;" onclick="eliminarPartidoAdmin()">➖ Borrar Último</button>
         </div>
-
         <div class="grid-grupos" id="grid-resultados-reales"></div>
-        <button class="btn-accion" onclick="guardarResultadosReales()" style="margin-top: 30px;">💾 Guardar Todos los Cambios</button>
+        <button class="btn-accion" onclick="guardarResultadosReales()" style="margin-top: 30px;">💾 Guardar Marcadores</button>
     </div>
 
-    <!-- Pestaña 4: Control y Modificación de Usuarios (Admin) -->
+    <!-- PANEL ADMIN USUARIOS -->
     <div id="panel-admin-usuarios" class="panel">
-        <h2>Panel de Control: Gestión de Participantes</h2>
-        
+        <h2>Gestión de Participantes</h2>
         <div style="background: #fff3e0; border: 2px solid #ffb300; padding: 15px; border-radius: 10px; margin-bottom: 25px; text-align: center;">
-            <h3 style="margin-top:0; color:#e65100; text-transform: uppercase; font-size: 16px;">🔒 Cierre Global de Inscripciones</h3>
-            <p style="margin: 5px 0 15px 0; font-size:13px; color: #555;">Activa esta casilla para desaparecer la pestaña de registro por completo.</p>
-            <label style="font-weight: bold; font-size: 15px; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; background: white; padding: 10px 15px; border-radius: 6px; border: 1px solid #ffb300;">
-                <input type="checkbox" id="chk-ocultar-registro" onchange="toggleVisibilidadRegistro()" style="transform: scale(1.3); cursor: pointer;"> 
-                Ocultar pestaña "Registrar Mis Pronósticos"
+            <label style="font-weight: bold; font-size: 15px; cursor: pointer; display: inline-flex; align-items: center; gap: 10px;">
+                <input type="checkbox" id="chk-ocultar-registro" onchange="toggleVisibilidadRegistro()" style="transform: scale(1.3);"> 
+                🔒 Ocultar pestaña de Registro Globalmente
             </label>
         </div>
-
-        <table style="margin-top: 10px;">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre de Usuario</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
+        <table>
+            <thead><tr><th>Nombre</th><th>Acciones</th></tr></thead>
             <tbody id="tabla-gestion-usuarios-body"></tbody>
         </table>
     </div>
 </div>
 
-<!-- Zona Login Administrador -->
 <div class="admin-lock-zone">
     <div id="login-admin-box">
-        <label style="font-weight: bold; margin-right: 10px;">Modo Organizador:</label>
-        <input type="password" id="pass-admin" placeholder="Contraseña Secreta">
-        <button onclick="loguearAdmin()" style="padding: 10px 20px; background: #333; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">Entrar</button>
+        <label style="font-weight: bold;">Modo Organizador:</label>
+        <input type="password" id="pass-admin" placeholder="Contraseña">
+        <button onclick="loguearAdmin()" style="padding: 10px; background: #333; color: white; border: none; border-radius: 6px; cursor: pointer;">Entrar</button>
     </div>
     <div id="logout-admin-box" style="display:none;">
-        <span style="color:#2e7d32; font-weight:bold; margin-right:20px;">🔓 Sesión de Administrador Activa</span>
-        <button onclick="cerrarAdmin()" style="padding:8px 15px; background:#c62828; color:white; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">Cerrar Panel</button>
+        <span style="color:#2e7d32; font-weight:bold;">🔓 Sesión Admin Activa</span>
+        <button onclick="cerrarAdmin()" style="padding:8px 15px; background:#c62828; color:white; border:none; border-radius:6px; cursor:pointer;">Salir</button>
     </div>
 </div>
 
 <script>
     const CONTRASEÑA_MAESTRA = "pajilla123"; 
     const ENDPOINT_NUBE = "https://kvdb.io/M7g1jxKHWEg4HC4Jy9nMs8/datos_quiniela_eliminatorias";
-
     let datosApp = { participantes: [], llaves: [], registroOculto: false };
 
+    // FUNCIÓN MEJORADA: Defensa contra datos corruptos que causan pantalla blanca
     function inicializarEstructura() {
-        if (!datosApp.llaves) { datosApp.llaves = []; }
-        if (datosApp.llaves.length === 0) {
+        if (!datosApp || typeof datosApp !== 'object') {
+            datosApp = { participantes: [], llaves: [], registroOculto: false };
+        }
+        if (!datosApp.participantes) datosApp.participantes = [];
+        if (!datosApp.llaves || !Array.isArray(datosApp.llaves) || datosApp.llaves.length === 0) {
             datosApp.llaves = Array.from({length: 16}, (_, i) => ({
                 id: i, eqA: "", eqB: "", rGolesA: "", rGolesB: "", rGanador: "", bloqueado: false, fase: "16avos de Final"
             }));
-        } else {
-            datosApp.llaves.forEach(l => { if (!l.fase) l.fase = "16avos de Final"; });
         }
-        if (datosApp.registroOculto === undefined) datosApp.registroOculto = false;
-        datosApp.participantes.forEach(p => {
-            if (!p.campeonProfetizado) p.campeonProfetizado = "";
-        });
+        if (typeof datosApp.registroOculto === 'undefined') datosApp.registroOculto = false;
     }
 
-    function aplicarFiltroBotonRegistro() {
-        const btnTabRegistro = document.getElementById('btn-tab-registro');
-        if (datosApp.registroOculto) {
-            btnTabRegistro.style.display = 'none';
-            if (document.getElementById('panel-registro').style.display === 'block') irAPestaña('panel-posiciones');
-        } else {
-            btnTabRegistro.style.display = 'inline-block';
+    function mostrarCargando(v) { document.getElementById('loading').style.display = v ? 'block' : 'none'; }
+
+    async function descargarDatosDeLaNube() {
+        mostrarCargando(true);
+        try {
+            // Se fuerza aún más la omisión de caché agregando un número aleatorio
+            let urlSinCache = ENDPOINT_NUBE + "?t=" + Date.now() + Math.random();
+            let res = await fetch(urlSinCache, { cache: 'no-store' });
+            
+            if (res.ok) {
+                let text = await res.text();
+                if (text && text.trim() !== "") {
+                    let json = JSON.parse(text);
+                    if (json) datosApp = json;
+                }
+            }
+        } catch (e) {
+            console.error("Error cargando base de datos:", e);
         }
+        
+        // Esta línea previene la pantalla en blanco armando todo si falló la carga
+        inicializarEstructura();
+        mostrarCargando(false);
+        
+        // Inicializar vistas principales
+        poblarSelectSimulador();
+        calcularYMostrarTabla();
+        document.getElementById('btn-tab-registro').style.display = datosApp.registroOculto ? 'none' : 'inline-block';
+    }
+
+    async function subirDatosALaNube() {
+        mostrarCargando(true);
+        try {
+            await fetch(ENDPOINT_NUBE, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(datosApp) });
+        } catch(e) {
+            alert("Error al guardar en la base de datos.");
+        }
+        mostrarCargando(false);
     }
 
     function irAPestaña(panelId) {
@@ -455,658 +249,300 @@
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(panelId).style.display = 'block';
         
-        if (panelId === 'panel-posiciones') {
-            document.getElementById('btn-tab-posiciones').classList.add('active');
-            calcularYMostrarTabla();
-        }
-        if (panelId === 'panel-registro') {
-            document.getElementById('btn-tab-registro').classList.add('active');
-            generarCamposFormularioPublico();
-        }
-        if (panelId === 'panel-resultados') {
-            document.getElementById('btn-tab-resultados').classList.add('active');
-            generarCamposResultadosReales();
-        }
-        if (panelId === 'panel-admin-usuarios') {
-            document.getElementById('btn-tab-usuarios').classList.add('active');
-            document.getElementById('chk-ocultar-registro').checked = !!datosApp.registroOculto;
-            generarTablaGestionUsuarios();
-        }
+        if (panelId === 'panel-posiciones') { document.getElementById('btn-tab-posiciones').classList.add('active'); poblarSelectSimulador(); calcularYMostrarTabla(); }
+        if (panelId === 'panel-registro') { document.getElementById('btn-tab-registro').classList.add('active'); generarCamposFormularioPublico(); }
+        if (panelId === 'panel-resultados') { document.getElementById('btn-tab-resultados').classList.add('active'); generarCamposResultadosReales(); }
+        if (panelId === 'panel-admin-usuarios') { document.getElementById('btn-tab-usuarios').classList.add('active'); document.getElementById('chk-ocultar-registro').checked = datosApp.registroOculto; generarTablaGestionUsuarios(); }
     }
 
-    async function descargarDatosDeLaNube() {
-        mostrarCargando(true);
-        try {
-            let res = await fetch(ENDPOINT_NUBE + "?t=" + Date.now(), { cache: 'no-store' });
-            if (res.ok) {
-                let text = await res.text();
-                if (text.trim() !== "") {
-                    let json = JSON.parse(text);
-                    if (json && json.participantes) datosApp = json;
-                }
+    function poblarSelectSimulador() {
+        const select = document.getElementById('simulador-select-partido');
+        if(!select) return;
+        let opciones = `<option value="">-- Toca aquí para elegir un Partido --</option>`;
+        datosApp.llaves.forEach((llave, i) => {
+            if(!llave.bloqueado) {
+                let eqA = llave.eqA || `Local (P${i+1})`;
+                let eqB = llave.eqB || `Visitante (P${i+1})`;
+                let fase = llave.fase || "Fase";
+                opciones += `<option value="${i}">[${fase}] ${eqA} vs ${eqB}</option>`;
             }
-        } catch (e) { console.log("Espacio nuevo listo."); }
+        });
+        select.innerHTML = opciones;
+    }
+
+    function ejecutarSimulador() {
+        const index = document.getElementById('simulador-select-partido').value;
+        const resDiv = document.getElementById('simulador-resultados');
         
-        inicializarEstructura();
-        aplicarFiltroBotonRegistro();
-        mostrarCargando(false);
-        calcularYMostrarTabla();
-    }
+        if (index === "") { resDiv.style.display = 'none'; return; }
 
-    async function subirDatosALaNube() {
-        mostrarCargando(true);
-        try {
-            await fetch(ENDPOINT_NUBE, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(datosApp) });
-        } catch (e) { alert("Error de red al guardar."); }
-        mostrarCargando(false);
-    }
-
-    function mostrarCargando(visible) { document.getElementById('loading').style.display = visible ? 'block' : 'none'; }
-
-    function loguearAdmin() {
-        if (document.getElementById('pass-admin').value === CONTRASEÑA_MAESTRA) {
-            document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'inline-block');
-            document.getElementById('login-admin-box').style.display = 'none';
-            document.getElementById('logout-admin-box').style.display = 'block';
-            document.getElementById('pass-admin').value = '';
-        } else { alert("❌ Contraseña incorrecta."); }
-    }
-
-    function cerrarAdmin() {
-        document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
-        document.getElementById('login-admin-box').style.display = 'block';
-        document.getElementById('logout-admin-box').style.display = 'none';
-        irAPestaña('panel-posiciones');
-    }
-
-    function calcularGanadorEnVivo(i, tipo) {
-        let gA = document.getElementById(`${tipo}-golesA-${i}`).value;
-        let gB = document.getElementById(`${tipo}-golesB-${i}`).value;
-        let txtStatus = document.getElementById(`${tipo}-status-${i}`);
-        let selectorGanador = document.getElementById(`${tipo}-ganador-${i}`);
+        const llave = datosApp.llaves[index];
+        const eqA = llave.eqA || "Local";
+        const eqB = llave.eqB || "Visitante";
         
-        let nameA = tipo === 'public' ? datosApp.llaves[i].eqA : (document.getElementById(`admin-eqA-${i}`).value || "Local");
-        let nameB = tipo === 'public' ? datosApp.llaves[i].eqB : (document.getElementById(`admin-eqB-${i}`).value || "Visitante");
+        let gA = document.getElementById('simulador-goles-a').value;
+        let gB = document.getElementById('simulador-goles-b').value;
+        let selectorGanador = document.getElementById('simulador-ganador');
 
-        if (tipo === 'admin' && selectorGanador) {
-            selectorGanador.options[1].text = nameA || "Local";
-            selectorGanador.options[2].text = nameB || "Visitante";
-        }
+        selectorGanador.options[1].text = eqA;
+        selectorGanador.options[2].text = eqB;
 
-        if (gA === "" || gB === "") {
-            txtStatus.innerText = "";
-            return;
-        }
+        if (gA === "" || gB === "") { resDiv.style.display = 'none'; return; }
 
         let nA = parseInt(gA);
         let nB = parseInt(gB);
+        
+        if (nA > nB) selectorGanador.value = "A";
+        else if (nA < nB) selectorGanador.value = "B";
 
-        if (nA === nB) {
-            txtStatus.innerText = "⚖️ Empate en 90 min. ¡Elige quién clasifica!";
-            txtStatus.style.color = "#d97706";
-        } else if (nA > nB) {
-            txtStatus.innerText = `🟢 Avanza: ${nameA}`;
-            txtStatus.style.color = "#2e7d32";
-            if (selectorGanador) selectorGanador.value = "A";
+        let ganador = selectorGanador.value;
+        if (ganador === "") {
+            resDiv.style.display = 'block';
+            resDiv.innerHTML = `<div style="text-align:center; color:#d97706; font-weight:bold; padding:10px; background:white; border-radius:8px;">⚖️ Empate detectado. Selecciona manualmente quién ganaría.</div>`;
+            return;
+        }
+
+        let aciertosExactos = [];
+        let aciertosGanador = [];
+
+        datosApp.participantes.forEach(p => {
+            if(!p.predicciones) return;
+            let pred = p.predicciones[index];
+            if (pred) {
+                let pA = parseInt(pred.pGolesA);
+                let pB = parseInt(pred.pGolesB);
+                let pGan = pred.pGanador;
+
+                let aciertaGanador = (pGan === ganador);
+                let aciertaMarcador = (pA === nA && pB === nB);
+
+                if (aciertaGanador && aciertaMarcador) aciertosExactos.push(p.nombre);
+                else if (aciertaGanador || aciertaMarcador) aciertosGanador.push(p.nombre);
+            }
+        });
+
+        resDiv.style.display = 'block';
+        
+        let htmlExactos = aciertosExactos.length > 0 
+            ? aciertosExactos.map(n => `<span class="badge-exacto">${n}</span>`).join('')
+            : `<span style="font-size:13px; color:#94a3b8; font-style:italic;">Nadie pegándole al exacto...</span>`;
+            
+        let htmlParciales = aciertosGanador.length > 0 
+            ? aciertosGanador.map(n => `<span class="badge-parcial">${n}</span>`).join('')
+            : `<span style="font-size:13px; color:#94a3b8; font-style:italic;">Nadie acertando al ganador...</span>`;
+
+        resDiv.innerHTML = `
+            <div style="background: white; padding: 15px; border-radius: 8px; border-left: 5px solid #16a34a; margin-bottom: 10px;">
+                <strong style="color:#16a34a; font-size:15px; display:block; margin-bottom:8px;">🎯 Le atinan al Marcador Exacto (+3 pts):</strong>
+                <div>${htmlExactos}</div>
+            </div>
+            <div style="background: white; padding: 15px; border-radius: 8px; border-left: 5px solid #d97706;">
+                <strong style="color:#d97706; font-size:15px; display:block; margin-bottom:8px;">✅ Acertando solo quién avanza (+1 pt):</strong>
+                <div>${htmlParciales}</div>
+            </div>
+        `;
+    }
+
+    function calcularPuntosLlave(pred, llave) {
+        if (!pred || !pred.pGanador || llave.rGolesA === "" || llave.rGolesB === "" || !llave.rGanador) return 0;
+        let aciertaClasificado = (pred.pGanador === llave.rGanador);
+        let aciertaMarcador = (parseInt(pred.pGolesA) === parseInt(llave.rGolesA) && parseInt(pred.pGolesB) === parseInt(llave.rGolesB));
+        
+        if (aciertaClasificado && aciertaMarcador) return 3;
+        else if (aciertaClasificado || aciertaMarcador) return 1;
+        return 0;
+    }
+
+    function calcularYMostrarTabla() {
+        let selectFase = document.getElementById('select-fase-posiciones');
+        if (!selectFase) return;
+        
+        let fasesUnicas = [...new Set(datosApp.llaves.map(l => l.fase || '16avos de Final'))];
+        if (fasesUnicas.length === 0) return;
+
+        let seleccionActual = selectFase.value;
+        selectFase.innerHTML = fasesUnicas.map(f => `<option value="${f}">${f}</option>`).join('');
+        selectFase.value = fasesUnicas.includes(seleccionActual) ? seleccionActual : fasesUnicas[fasesUnicas.length - 1]; 
+        let faseSeleccionada = selectFase.value;
+
+        let resultados = datosApp.participantes.map(p => {
+            let total = 0;
+            if(p.predicciones) {
+                datosApp.llaves.forEach((llave, i) => {
+                    if ((llave.fase || '16avos de Final') === faseSeleccionada && p.predicciones[i]) {
+                        total += calcularPuntosLlave(p.predicciones[i], llave);
+                    }
+                });
+            }
+            return { id: p.id, nombre: p.nombre, puntosTotales: total };
+        });
+        
+        resultados.sort((a, b) => b.puntosTotales - a.puntosTotales);
+        const tbody = document.getElementById('tabla-posiciones-body');
+        tbody.innerHTML = resultados.length === 0 ? `<tr><td colspan="4">Sin usuarios registrados.</td></tr>` : resultados.map((r, idx) => `
+            <tr>
+                <td><strong>${idx + 1}º</strong></td>
+                <td style="text-align: left;">${r.nombre}</td>
+                <td class="puntos-total">${r.puntosTotales} pts</td>
+                <td><button class="btn-ver-publico" onclick="verPrediccionesPublicas(${r.id})">👁️ Ver</button></td>
+            </tr>`).join('');
+    }
+
+    function verPrediccionesPublicas(id) {
+        const p = datosApp.participantes.find(part => part.id === id);
+        if(!p) return;
+        let faseSel = document.getElementById('select-fase-posiciones').value;
+        document.getElementById('nombre-ver-publico').innerText = p.nombre;
+        
+        const cont = document.getElementById('grid-ver-publico');
+        cont.innerHTML = '';
+        
+        datosApp.llaves.forEach((llave, i) => {
+            if ((llave.fase || '16avos de Final') !== faseSel) return; 
+            const pred = (p.predicciones && p.predicciones[i]) ? p.predicciones[i] : { pGolesA: "-", pGolesB: "-", pGanador: "-" };
+            const pts = calcularPuntosLlave(pred, llave);
+            
+            cont.innerHTML += `
+                <div class="group-card">
+                    <h3 style="text-align:center; color:var(--primary); margin-top:0;">Partido ${i+1}</h3>
+                    <div style="font-size: 13px; text-align:center; margin-bottom:8px;">
+                        <strong>Marcador Real:</strong> ${llave.rGolesA !== "" ? llave.rGolesA : '-'} - ${llave.rGolesB !== "" ? llave.rGolesB : '-'}
+                    </div>
+                    <div style="background: #fff; padding: 10px; border: 1px solid #ddd; border-radius: 6px; text-align:center;">
+                        <strong>Su Pronóstico:</strong> <br> ${llave.eqA || 'Local'} [${pred.pGolesA}] - [${pred.pGolesB}] ${llave.eqB || 'Visitante'}
+                        <hr style="margin:5px 0;">
+                        <span style="font-weight:bold; color:var(--primary);">Sumó: ${pts} pts</span>
+                    </div>
+                </div>`;
+        });
+        irAPestaña('panel-ver-predicciones-publico');
+    }
+
+    function generarCamposFormularioPublico() {
+        const contenedor = document.getElementById('grid-registro-publico');
+        contenedor.innerHTML = '';
+        let abiertos = 0;
+
+        datosApp.llaves.forEach((llave, i) => {
+            if (llave.bloqueado) return; 
+            abiertos++;
+            contenedor.innerHTML += `
+                <div class="group-card">
+                    <h3 class="group-header">Partido ${i + 1} (${llave.fase})</h3>
+                    <div class="match-row">
+                        <span class="team-label">${llave.eqA || "Local"}</span>
+                        <input type="number" id="public-golesA-${i}" class="score-box" min="0">
+                        <span>-</span>
+                        <input type="number" id="public-golesB-${i}" class="score-box" min="0">
+                        <span class="team-label">${llave.eqB || "Visitante"}</span>
+                    </div>
+                    <select id="public-ganador-${i}" style="margin-top:10px;">
+                        <option value="">-- ¿Quién Avanza? --</option>
+                        <option value="A">${llave.eqA || "Local"}</option>
+                        <option value="B">${llave.eqB || "Visitante"}</option>
+                    </select>
+                </div>`;
+        });
+        document.getElementById('btn-guardar-pronosticos').style.display = abiertos > 0 ? 'block' : 'none';
+        if(abiertos === 0) contenedor.innerHTML = `<div style="text-align:center; padding:20px; width:100%;">No hay partidos disponibles para pronosticar.</div>`;
+    }
+
+    async function guardarPrediccionesUsuarioComun() {
+        let nombre = document.getElementById('usuario-nombre-registro').value.trim();
+        if (!nombre) return alert("⚠️ Ingresa tu nombre.");
+
+        let nuevasPreds = [];
+        for (let i = 0; i < datosApp.llaves.length; i++) {
+            if (datosApp.llaves[i].bloqueado) continue; 
+            let gA = document.getElementById(`public-golesA-${i}`).value;
+            let gB = document.getElementById(`public-golesB-${i}`).value;
+            let gan = document.getElementById(`public-ganador-${i}`).value;
+            if (gA === "" || gB === "" || gan === "") return alert(`⚠️ Faltan datos en el Partido ${i + 1}.`);
+            nuevasPreds[i] = { pGolesA: gA, pGolesB: gB, pGanador: gan };
+        }
+
+        let idx = datosApp.participantes.findIndex(p => p.nombre.toLowerCase() === nombre.toLowerCase());
+        if (idx === -1) {
+            datosApp.participantes.push({ id: Date.now(), nombre: nombre, predicciones: nuevasPreds });
         } else {
-            txtStatus.innerText = `🟢 Avanza: ${nameB}`;
-            txtStatus.style.color = "#2e7d32";
-            if (selectorGanador) selectorGanador.value = "B";
+            datosApp.participantes[idx].predicciones = nuevasPreds;
+        }
+
+        await subirDatosALaNube();
+        alert("✅ Registrado con éxito.");
+        irAPestaña('panel-posiciones');
+    }
+
+    function loguearAdmin() {
+        if (document.getElementById('pass-admin').value === CONTRASEÑA_MAESTRA) {
+            document.querySelectorAll('.admin-only').forEach(e => e.style.display = 'inline-block');
+            document.getElementById('login-admin-box').style.display = 'none';
+            document.getElementById('logout-admin-box').style.display = 'block';
+        } else alert("❌ Error");
+    }
+    
+    function cerrarAdmin() { location.reload(); }
+
+    function generarCamposResultadosReales() {
+        const cont = document.getElementById('grid-resultados-reales');
+        cont.innerHTML = datosApp.llaves.map((l, i) => `
+            <div class="group-card">
+                <input type="text" id="adm-fase-${i}" value="${l.fase}" placeholder="Fase" style="margin-bottom:10px;">
+                <input type="text" id="adm-eqA-${i}" value="${l.eqA}" placeholder="Eq. A">
+                <input type="text" id="adm-eqB-${i}" value="${l.eqB}" placeholder="Eq. B" style="margin-top:5px;">
+                <div class="match-row">
+                    <input type="number" id="adm-gA-${i}" value="${l.rGolesA}" class="score-box" placeholder="G">
+                    <span>-</span>
+                    <input type="number" id="adm-gB-${i}" value="${l.rGolesB}" class="score-box" placeholder="G">
+                </div>
+                <select id="adm-gan-${i}" style="margin-bottom:10px;">
+                    <option value="">- Ganador Oficial -</option>
+                    <option value="A" ${l.rGanador === 'A' ? 'selected' : ''}>A (Local)</option>
+                    <option value="B" ${l.rGanador === 'B' ? 'selected' : ''}>B (Visitante)</option>
+                </select>
+                <label><input type="checkbox" id="adm-lock-${i}" ${l.bloqueado ? 'checked' : ''}> 🔒 Bloqueado (Público no lo ve)</label>
+            </div>`).join('');
+    }
+
+    function agregarPartidoAdmin() { datosApp.llaves.push({ id: datosApp.llaves.length, eqA:"", eqB:"", rGolesA:"", rGolesB:"", rGanador:"", bloqueado:false, fase:"Fase" }); generarCamposResultadosReales(); }
+    function eliminarPartidoAdmin() { if(datosApp.llaves.length>0 && confirm("¿Borrar último?")) { datosApp.llaves.pop(); generarCamposResultadosReales(); } }
+
+    async function guardarResultadosReales() {
+        datosApp.llaves.forEach((l, i) => {
+            l.fase = document.getElementById(`adm-fase-${i}`).value;
+            l.eqA = document.getElementById(`adm-eqA-${i}`).value;
+            l.eqB = document.getElementById(`adm-eqB-${i}`).value;
+            l.rGolesA = document.getElementById(`adm-gA-${i}`).value;
+            l.rGolesB = document.getElementById(`adm-gB-${i}`).value;
+            l.rGanador = document.getElementById(`adm-gan-${i}`).value;
+            l.bloqueado = document.getElementById(`adm-lock-${i}`).checked;
+        });
+        await subirDatosALaNube();
+        alert("✅ Guardado");
+        irAPestaña('panel-posiciones');
+    }
+
+    function generarTablaGestionUsuarios() {
+        document.getElementById('tabla-gestion-usuarios-body').innerHTML = datosApp.participantes.map(p => `
+            <tr><td>${p.nombre}</td><td><button class="btn-danger" onclick="eliminarUsuario(${p.id})">Borrar</button></td></tr>`).join('');
+    }
+    
+    async function eliminarUsuario(id) {
+        if(confirm("¿Borrar participante?")) {
+            datosApp.participantes = datosApp.participantes.filter(p => p.id !== id);
+            await subirDatosALaNube();
+            generarTablaGestionUsuarios();
         }
     }
 
     async function toggleVisibilidadRegistro() {
         datosApp.registroOculto = document.getElementById('chk-ocultar-registro').checked;
         await subirDatosALaNube();
-        aplicarFiltroBotonRegistro();
-        alert(datosApp.registroOculto ? "🔒 Registros Cerrados Globalmente." : "🔓 Registros Abiertos.");
+        document.getElementById('btn-tab-registro').style.display = datosApp.registroOculto ? 'none' : 'inline-block';
     }
 
-    // --- Módulo Admin: Gestión de Fases ---
-    function agregarPartidoAdmin() {
-        let ultimaFase = datosApp.llaves.length > 0 ? datosApp.llaves[datosApp.llaves.length - 1].fase : "Semifinales";
-        datosApp.llaves.push({
-            id: datosApp.llaves.length, eqA: "", eqB: "", rGolesA: "", rGolesB: "", rGanador: "", bloqueado: false, fase: ultimaFase
-        });
-        generarCamposResultadosReales();
-    }
-
-    function eliminarPartidoAdmin() {
-        if(datosApp.llaves.length > 0) {
-            if(confirm("⚠️ ¿Estás seguro de eliminar el último partido agregado?")) {
-                datosApp.llaves.pop();
-                generarCamposResultadosReales();
-            }
-        }
-    }
-
-    function generarCamposResultadosReales() {
-        const contenedor = document.getElementById('grid-resultados-reales');
-        contenedor.innerHTML = '';
-        datosApp.llaves.forEach((llave, i) => {
-            let textoInicial = "";
-            if(llave.rGolesA !== "" && llave.rGolesB !== "") {
-                let nA = parseInt(llave.rGolesA); let nB = parseInt(llave.rGolesB);
-                if (nA === nB) { textoInicial = "⚖️ Empate en 90 min."; } 
-                else { textoInicial = `🟢 Avanza: ${nA > nB ? (llave.eqA||'Local') : (llave.eqB||'Visitante')}`; }
-            }
-
-            contenedor.innerHTML += `
-                <div class="group-card" style="${llave.bloqueado ? 'opacity:0.7; border: 2px solid #ff9800;' : 'border: 2px solid transparent;'}">
-                    <h3 class="group-header">Partido ${i + 1}</h3>
-                    
-                    <div style="margin-bottom:15px; background:#f8fafc; padding:8px; border-radius:6px; border:1px solid #e2e8f0;">
-                        <label style="font-size:11px; font-weight:bold; color:#64748b; display:block; margin-bottom:4px;">🏷️ Etiqueta de Fase:</label>
-                        <input type="text" id="admin-fase-${i}" value="${llave.fase || ''}" placeholder="Ej. Semifinales / Final" style="padding:6px; font-size:13px; border-color:#cbd5e1;">
-                    </div>
-
-                    <div style="margin-bottom:10px; display:flex; flex-direction:column; gap:5px;">
-                        <input type="text" id="admin-eqA-${i}" value="${llave.eqA}" placeholder="Equipo Local (A)" oninput="calcularGanadorEnVivo(${i}, 'admin')">
-                        <input type="text" id="admin-eqB-${i}" value="${llave.eqB}" placeholder="Equipo Visitante (B)" oninput="calcularGanadorEnVivo(${i}, 'admin')">
-                    </div>
-                    <hr style="border:0; border-top:1px dashed #ccc;">
-                    <div class="match-row">
-                        <input type="number" id="admin-golesA-${i}" class="score-box" value="${llave.rGolesA}" min="0" oninput="calcularGanadorEnVivo(${i}, 'admin')">
-                        <span>vs</span>
-                        <input type="number" id="admin-golesB-${i}" class="score-box" value="${llave.rGolesB}" min="0" oninput="calcularGanadorEnVivo(${i}, 'admin')">
-                    </div>
-                    <div style="margin-bottom:10px; display:flex; flex-direction:column; gap:2px;">
-                        <label style="font-size:12px; font-weight:bold; color:var(--primary);">🏆 Clasifica Oficial:</label>
-                        <select id="admin-ganador-${i}">
-                            <option value="">-- Seleccionar --</option>
-                            <option value="A" ${llave.rGanador === 'A' ? 'selected' : ''}>${llave.eqA || 'Local'}</option>
-                            <option value="B" ${llave.rGanador === 'B' ? 'selected' : ''}>${llave.eqB || 'Visitante'}</option>
-                        </select>
-                    </div>
-                    <div id="admin-status-${i}" class="status-avanza" style="color: #2e7d32;">${textoInicial}</div>
-                    
-                    <div class="candado-box">
-                        <label style="cursor:pointer;">
-                            <input type="checkbox" id="admin-bloqueado-${i}" ${llave.bloqueado ? 'checked' : ''}>
-                            🔒 Bloquear partido (Ocultar al público)
-                        </label>
-                    </div>
-                </div>`;
-        });
-    }
-
-    async function guardarResultadosReales() {
-        for (let i = 0; i < datosApp.llaves.length; i++) {
-            let gA = document.getElementById(`admin-golesA-${i}`).value;
-            let gB = document.getElementById(`admin-golesB-${i}`).value;
-            let ganadorSeleccionado = document.getElementById(`admin-ganador-${i}`).value;
-
-            if (gA !== "" && gB !== "") {
-                if (ganadorSeleccionado === "") return alert(`⚠️ Selecciona quién clasifica oficialmente en el Partido ${i+1}.`);
-                let nA = parseInt(gA); let nB = parseInt(gB);
-                if (nA > nB && ganadorSeleccionado !== 'A') return alert(`⚠️ Consistencia: En el Partido ${i+1} el local tiene más goles.`);
-                if (nA < nB && ganadorSeleccionado !== 'B') return alert(`⚠️ Consistencia: En el Partido ${i+1} el visitante tiene más goles.`);
-            }
-        }
-
-        datosApp.llaves.forEach((llave, i) => {
-            llave.fase = document.getElementById(`admin-fase-${i}`).value.trim();
-            llave.eqA = document.getElementById(`admin-eqA-${i}`).value;
-            llave.eqB = document.getElementById(`admin-eqB-${i}`).value;
-            llave.rGolesA = document.getElementById(`admin-golesA-${i}`).value;
-            llave.rGolesB = document.getElementById(`admin-golesB-${i}`).value;
-            llave.bloqueado = document.getElementById(`admin-bloqueado-${i}`).checked;
-            if (llave.rGolesA !== "" && llave.rGolesB !== "") {
-                llave.rGanador = document.getElementById(`admin-ganador-${i}`).value;
-            } else {
-                llave.rGanador = "";
-            }
-        });
-        await subirDatosALaNube();
-        alert("✅ Configuración guardada exitosamente.");
-        irAPestaña('panel-posiciones');
-    }
-
-    // --- Módulo Admin Avanzado: Control de Usuarios ---
-    function generarTablaGestionUsuarios() {
-        const tbody = document.getElementById('tabla-gestion-usuarios-body');
-        tbody.innerHTML = '';
-        if (datosApp.participantes.length === 0) { tbody.innerHTML = `<tr><td colspan="3">No hay participantes registrados.</td></tr>`; return; }
-
-        datosApp.participantes.forEach(p => {
-            tbody.innerHTML += `
-                <tr>
-                    <td style="font-size:12px; color:#666;">#${p.id}</td>
-                    <td style="text-align:left; font-weight:bold; padding-left:20px;">${p.nombre}</td>
-                    <td>
-                        <button class="btn-danger" onclick="eliminarUsuario(${p.id})">🗑️ Borrar</button>
-                    </td>
-                </tr>`;
-        });
-    }
-
-    async function eliminarUsuario(id) {
-        const p = datosApp.participantes.find(part => part.id === id);
-        if (!p) return;
-        if (confirm(`❌ ¿Seguro de borrar a "${p.nombre}"?`)) {
-            datosApp.participantes = datosApp.participantes.filter(part => part.id !== id);
-            await subirDatosALaNube();
-            generarTablaGestionUsuarios();
-        }
-    }
-
-    // --- Módulo Público: Registro Visual ---
-    function generarCamposFormularioPublico() {
-        const contenedor = document.getElementById('grid-registro-publico');
-        contenedor.innerHTML = '';
-        let partidosAbiertos = 0;
-        let esSemifinal = false;
-        let equiposSemifinal = [];
-
-        datosApp.llaves.forEach((llave, i) => {
-            if (llave.bloqueado) return; 
-            
-            partidosAbiertos++;
-            const nombreEqA = llave.eqA || "Local";
-            const nombreEqB = llave.eqB || "Visitante";
-
-            if (llave.fase && llave.fase.toLowerCase().includes("semifinal")) {
-                esSemifinal = true;
-                if(nombreEqA !== "Local") equiposSemifinal.push(nombreEqA);
-                if(nombreEqB !== "Visitante") equiposSemifinal.push(nombreEqB);
-            }
-
-            contenedor.innerHTML += `
-                <div class="group-card">
-                    <h3 class="group-header">Partido ${i + 1}</h3>
-                    <div style="text-align:center; font-size:11px; font-weight:bold; color:#777; margin-bottom:10px; text-transform:uppercase;">🏷️ ${llave.fase}</div>
-                    <div class="match-row">
-                        <span class="team-label left">${nombreEqA}</span>
-                        <input type="number" id="public-golesA-${i}" class="score-box" min="0" placeholder="0" oninput="calcularGanadorEnVivo(${i}, 'public')">
-                        <span style="font-weight:bold; color:#777;">-</span>
-                        <input type="number" id="public-golesB-${i}" class="score-box" min="0" placeholder="0" oninput="calcularGanadorEnVivo(${i}, 'public')">
-                        <span class="team-label right">${nombreEqB}</span>
-                    </div>
-                    <div style="margin-bottom:5px; display:flex; flex-direction:column; gap:2px;">
-                        <label style="font-size:12px; font-weight:bold; color:var(--primary); text-align:center;">🏆 Clasifica / Campeón:</label>
-                        <select id="public-ganador-${i}">
-                            <option value="">-- Seleccionar --</option>
-                            <option value="A">${nombreEqA}</option>
-                            <option value="B">${nombreEqB}</option>
-                        </select>
-                    </div>
-                    <div id="public-status-${i}" class="status-avanza"></div>
-                </div>`;
-        });
-
-        // Inyectar el selector del "Campeón Profetizado" si estamos en la fase Semifinal
-        if (esSemifinal && partidosAbiertos > 0) {
-            // Eliminar duplicados en caso de que escriban igual
-            equiposSemifinal = [...new Set(equiposSemifinal)];
-            
-            let opcionesHTML = equiposSemifinal.map(eq => `<option value="${eq}">${eq}</option>`).join('');
-            
-            contenedor.innerHTML += `
-                <div class="group-card" style="grid-column: 1 / -1; border: 2px solid #ffb300; background: #fff8e1;">
-                    <h3 style="color: #e65100; text-align: center; margin-top:0;">👑 Bono: Campeón Profeta (+3 Puntos)</h3>
-                    <p style="font-size: 13px; text-align: center; color:#555;">¿Cuál de estos equipos crees que levantará la Copa del Mundo en la Final?</p>
-                    <select id="select-campeon-profetizado" style="font-size: 16px; font-weight:bold; padding: 10px; border-color: #ffb300; background: white; color: #e65100; text-align:center;">
-                        <option value="">-- Elige al Campeón del Torneo --</option>
-                        ${opcionesHTML}
-                    </select>
-                </div>
-            `;
-        }
-
-        const btnGuardar = document.getElementById('btn-guardar-pronosticos');
-        if (partidosAbiertos === 0) {
-            contenedor.innerHTML = `
-                <div style="grid-column: 1 / -1; text-align:center; padding: 30px; background:#fff3e0; border-radius:8px; border:2px dashed #ffb300;">
-                    <h3 style="color:#e65100;">⏸️ No hay partidos abiertos</h3>
-                    <p>El administrador aún no ha habilitado la siguiente ronda. ¡Vuelve pronto!</p>
-                </div>`;
-            btnGuardar.style.display = 'none';
-        } else {
-            btnGuardar.style.display = 'block';
-        }
-    }
-
-    async function guardarPrediccionesUsuarioComun() {
-        if (datosApp.registroOculto) return alert("🔒 Lo sentimos, las inscripciones están cerradas.");
-        const nombreInput = document.getElementById('usuario-nombre-registro');
-        const nombre = nombreInput.value.trim();
-        if (!nombre) return alert("⚠️ Por favor ingresa tu nombre completo.");
-
-        // Validar que eligió Campeón si el selector está en pantalla
-        const selectCampeon = document.getElementById('select-campeon-profetizado');
-        if (selectCampeon && selectCampeon.value === "") {
-            return alert("⚠️ Para participar en las Semifinales, debes elegir a tu Campeón Profeta en el recuadro amarillo.");
-        }
-
-        for (let i = 0; i < datosApp.llaves.length; i++) {
-            if (datosApp.llaves[i].bloqueado) continue; 
-            let gA = document.getElementById(`public-golesA-${i}`).value;
-            let gB = document.getElementById(`public-golesB-${i}`).value;
-            let gan = document.getElementById(`public-ganador-${i}`).value;
-            let nEqA = datosApp.llaves[i].eqA || "Local";
-            let nEqB = datosApp.llaves[i].eqB || "Visitante";
-
-            if (gA === "" || gB === "") return alert(`⚠️ Te falta el marcador del Partido ${i + 1} (${nEqA} vs ${nEqB}).`);
-            if (gan === "") return alert(`⚠️ Selecciona quién clasifica en el Partido ${i + 1} (${nEqA} vs ${nEqB}).`);
-
-            let nA = parseInt(gA); let nB = parseInt(gB);
-            if (nA > nB && gan !== 'A') return alert(`⚠️ Inconsistencia en el Partido ${i + 1}: ${nEqA} tiene más goles.`);
-            if (nA < nB && gan !== 'B') return alert(`⚠️ Inconsistencia en el Partido ${i + 1}: ${nEqB} tiene más goles.`);
-        }
-
-        mostrarCargando(true);
-        try { 
-            let res = await fetch(ENDPOINT_NUBE + "?t=" + Date.now(), { cache: 'no-store' });
-            if (res.ok) { let json = await res.json(); if (json && json.participantes) datosApp = json; }
-        } catch (e) {}
-
-        if (datosApp.registroOculto) { mostrarCargando(false); return alert("🔒 Las inscripciones se cerraron."); }
-
-        let nombreNormalizado = nombre.toLowerCase().replace(/\s+/g, ' ').trim();
-        let indexUsuario = datosApp.participantes.findIndex(p => p.nombre.toLowerCase().replace(/\s+/g, ' ').trim() === nombreNormalizado);
-        
-        let misPredicciones = [];
-        let esUsuarioNuevo = (indexUsuario === -1);
-
-        if (!esUsuarioNuevo) { misPredicciones = [...datosApp.participantes[indexUsuario].predicciones]; }
-
-        for (let i = 0; i < datosApp.llaves.length; i++) {
-            if (!datosApp.llaves[i].bloqueado) {
-                misPredicciones[i] = {
-                    pGolesA: document.getElementById(`public-golesA-${i}`).value,
-                    pGolesB: document.getElementById(`public-golesB-${i}`).value,
-                    pGanador: document.getElementById(`public-ganador-${i}`).value
-                };
-            }
-        }
-
-        let participanteFinal;
-        if (esUsuarioNuevo) {
-            participanteFinal = { id: Date.now(), nombre: nombre, predicciones: misPredicciones, campeonProfetizado: "" };
-            datosApp.participantes.push(participanteFinal);
-        } else {
-            datosApp.participantes[indexUsuario].predicciones = misPredicciones;
-            participanteFinal = datosApp.participantes[indexUsuario];
-        }
-
-        // Si estamos en Semifinales, guardar el Campeón que predijo para usarlo en la Final
-        if (selectCampeon && selectCampeon.value !== "") {
-            participanteFinal.campeonProfetizado = selectCampeon.value;
-        }
-        
-        await subirDatosALaNube();
-        activarPantallaExito(participanteFinal);
-    }
-
-    function activarPantallaExito(participante) {
-        document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
-        document.getElementById('panel-exito').style.display = 'block';
-        document.getElementById('recibo-nombre').innerText = participante.nombre;
-        
-        const listaContenedor = document.getElementById('recibo-lista-partidos');
-        const campeonContenedor = document.getElementById('recibo-campeon-profetizado');
-        listaContenedor.innerHTML = '';
-        campeonContenedor.innerHTML = '';
-
-        let esReciboSemifinal = false;
-
-        datosApp.llaves.forEach((llave, i) => {
-            if (llave.bloqueado) return; 
-            
-            if (llave.fase && llave.fase.toLowerCase().includes("semifinal")) esReciboSemifinal = true;
-            document.getElementById('recibo-fase-activa').innerText = llave.fase || "Ronda Activa";
-
-            const pred = participante.predicciones[i] || { pGolesA: "-", pGolesB: "-", pGanador: "" };
-            const nEqA = llave.eqA || "Local";
-            const nEqB = llave.eqB || "Visitante";
-            const ganadorTexto = pred.pGanador === 'A' ? nEqA : (pred.pGanador === 'B' ? nEqB : '-');
-
-            listaContenedor.innerHTML += `
-                <div style="padding: 6px 0; border-bottom: 1px dashed #ddd; font-size:13px;">
-                    <div style="display:flex; justify-content:space-between; font-weight:bold;">
-                        <span>${nEqA} (${pred.pGolesA})</span>
-                        <span style="color:#777;">vs</span>
-                        <span>(${pred.pGolesB}) ${nEqB}</span>
-                    </div>
-                    <div style="color:#004d40; font-size:11px; text-align:center; margin-top:2px;">Avanza/Campeón: <strong>${ganadorTexto}</strong></div>
-                </div>`;
-        });
-
-        if (esReciboSemifinal && participante.campeonProfetizado) {
-            campeonContenedor.innerHTML = `
-                <div style="margin-top:12px; background:#fff8e1; padding:10px; border:1px solid #ffb300; border-radius:6px; text-align:center;">
-                    <strong style="color:#e65100; font-size:12px; display:block;">👑 CAMPEÓN PROFETIZADO 👑</strong> 
-                    <span style="font-weight:bold; font-size:15px; color:#333;">${participante.campeonProfetizado}</span>
-                </div>`;
-        }
-
-        setTimeout(() => {
-            html2canvas(document.getElementById('recibo-visual-whatsapp'), { scale: 2 }).then(canvas => {
-                const btnDescarga = document.getElementById('btn-descargar-foto');
-                btnDescarga.onclick = function() {
-                    let link = document.createElement('a');
-                    link.download = `Quiniela_${participante.nombre.replace(/\s+/g, '_')}.png`;
-                    link.href = canvas.toDataURL("image/png");
-                    link.click();
-                };
-            });
-        }, 600);
-    }
-
-    function irAInicioLimpiando() {
-        document.getElementById('usuario-nombre-registro').value = '';
-        irAPestaña('panel-posiciones');
-        descargarDatosDeLaNube();
-    }
-
-    function calcularPuntosLlave(pred, llave) {
-        if (!pred || !pred.pGanador) return 0; 
-        if (llave.rGolesA === "" || llave.rGolesB === "" || !llave.rGanador) return 0;
-        let acientaClasificado = (pred.pGanador === llave.rGanador);
-        let pA = parseInt(pred.pGolesA); let pB = parseInt(pred.pGolesB);
-        let rA = parseInt(llave.rGolesA); let rB = parseInt(llave.rGolesB);
-        let aciertaMarcador90Min = (pA === rA && pB === rB);
-        
-        if (acientaClasificado && aciertaMarcador90Min) return 3;
-        else if (acientaClasificado || aciertaMarcador90Min) return 1;
-        return 0;
-    }
-
-    // --- Separación por Fases y Bonos Especiales ---
-    function calcularYMostrarTabla() {
-        let selectFase = document.getElementById('select-fase-posiciones');
-        let fasesUnicas = [...new Set(datosApp.llaves.map(l => l.fase || '16avos de Final'))];
-        
-        if (fasesUnicas.length === 0) {
-            selectFase.innerHTML = '<option value="">Sin datos</option>';
-            document.getElementById('tabla-posiciones-body').innerHTML = `<tr><td colspan="4">Ningún partido registrado aún.</td></tr>`;
-            return;
-        }
-
-        let seleccionActual = selectFase.value;
-        selectFase.innerHTML = fasesUnicas.map(f => `<option value="${f}">${f}</option>`).join('');
-        
-        if (seleccionActual && fasesUnicas.includes(seleccionActual)) {
-            selectFase.value = seleccionActual;
-        } else {
-            selectFase.value = fasesUnicas[fasesUnicas.length - 1]; 
-        }
-
-        let faseSeleccionada = selectFase.value;
-        let esFaseSemifinal = faseSeleccionada.toLowerCase().includes("semifinal");
-        let esFaseFinal = faseSeleccionada.toLowerCase().includes("final") && !esFaseSemifinal;
-
-        let resultados = datosApp.participantes.map(p => {
-            let total = 0;
-            let bonoAcumulado = 0;
-            const arrP = p.predicciones || [];
-            
-            // 1. Puntos Normales de la Fase
-            datosApp.llaves.forEach((llave, i) => {
-                let faseLlave = llave.fase || '16avos de Final';
-                if (faseLlave === faseSeleccionada && arrP[i]) {
-                    total += calcularPuntosLlave(arrP[i], llave);
-                }
-            });
-
-            // 2. Bono Semifinales (+3 pts si le atina a los dos equipos que avanzan, +1 pt si le atina a uno)
-            if (esFaseSemifinal) {
-                let llavesSemi = datosApp.llaves.filter(l => (l.fase || '') === faseSeleccionada);
-                let aciertosFinalistas = 0;
-                let partidosJugadosSemi = 0;
-                
-                llavesSemi.forEach(l => {
-                    if(l.rGanador !== "") { 
-                        partidosJugadosSemi++;
-                        let i = l.id;
-                        if(arrP[i] && arrP[i].pGanador === l.rGanador) aciertosFinalistas++;
-                    }
-                });
-                
-                if (partidosJugadosSemi > 0) {
-                    if (aciertosFinalistas === 2) {
-                        bonoAcumulado += 3;
-                    } else if (aciertosFinalistas === 1) {
-                        bonoAcumulado += 1;
-                    }
-                }
-            }
-
-            // 3. Bono Gran Final (+3 pts si el campeón real es igual al que profetizó en la semi)
-            if (esFaseFinal && p.campeonProfetizado) {
-                let llavesFinal = datosApp.llaves.filter(l => (l.fase || '') === faseSeleccionada);
-                llavesFinal.forEach(l => {
-                    if (l.rGanador !== "") {
-                        let ganadorRealStr = l.rGanador === 'A' ? l.eqA : l.eqB;
-                        if (ganadorRealStr === p.campeonProfetizado) {
-                            bonoAcumulado += 3;
-                        }
-                    }
-                });
-            }
-
-            return { 
-                id: p.id, 
-                nombre: p.nombre, 
-                puntosFase: total, 
-                puntosBono: bonoAcumulado,
-                puntosTotales: total + bonoAcumulado,
-                campeonVidente: p.campeonProfetizado || "Ninguno"
-            };
-        });
-        
-        resultados.sort((a, b) => b.puntosTotales - a.puntosTotales);
-        const tbody = document.getElementById('tabla-posiciones-body');
-        tbody.innerHTML = '';
-        
-        if(resultados.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="4">Ningún usuario registrado aún.</td></tr>`;
-            return;
-        }
-
-        resultados.forEach((r, idx) => {
-            let badgeBono = r.puntosBono > 0 ? `<div class="bono-tag">+${r.puntosBono} Bono</div>` : "";
-            tbody.innerHTML += `
-                <tr>
-                    <td><strong>${idx + 1}º</strong></td>
-                    <td style="text-align: left; padding-left: 20px;">
-                        ${r.nombre}
-                        ${badgeBono ? `<br>${badgeBono}` : ''}
-                    </td>
-                    <td class="puntos-total">${r.puntosTotales} pts</td>
-                    <td><button class="btn-ver-publico" onclick="verPrediccionesPublicas(${r.id})">👁️ Ver</button></td>
-                </tr>`;
-        });
-    }
-
-    function verPrediccionesPublicas(id) {
-        const p = datosApp.participantes.find(part => part.id === id);
-        if(!p) return;
-        
-        let faseSeleccionada = document.getElementById('select-fase-posiciones').value;
-        let esFaseSemifinal = faseSeleccionada.toLowerCase().includes("semifinal");
-        let esFaseFinal = faseSeleccionada.toLowerCase().includes("final") && !esFaseSemifinal;
-
-        document.getElementById('nombre-ver-publico').innerText = p.nombre;
-        document.getElementById('titulo-fase-publico').innerText = `Ronda: ${faseSeleccionada}`;
-        
-        const contenedor = document.getElementById('grid-ver-publico');
-        const contenedorBonos = document.getElementById('contenedor-bonos-auditoria');
-        contenedor.innerHTML = '';
-        contenedorBonos.innerHTML = '';
-        
-        let aciertosFinalistas = 0;
-
-        datosApp.llaves.forEach((llave, i) => {
-            let faseLlave = llave.fase || '16avos de Final';
-            if (faseLlave !== faseSeleccionada) return; 
-
-            const pred = p.predicciones[i] || { pGolesA: "", pGolesB: "", pGanador: "" };
-            const pts = calcularPuntosLlave(pred, llave);
-            const nEqA = llave.eqA || "Local";
-            const nEqB = llave.eqB || "Visitante";
-
-            const nombreGanadorReal = llave.rGanador === 'A' ? nEqA : (llave.rGanador === 'B' ? nEqB : 'Pendiente');
-            const nombreGanadorPred = pred.pGanador === 'A' ? nEqA : (pred.pGanador === 'B' ? nEqB : 'Sin Llenar');
-
-            if (esFaseSemifinal && llave.rGanador !== "") {
-                if (pred.pGanador === llave.rGanador) aciertosFinalistas++;
-            }
-
-            contenedor.innerHTML += `
-                <div class="group-card" style="${llave.bloqueado ? 'background:#f1f5f9;' : ''}">
-                    <h3 style="margin:0 0 10px 0; text-align:center; color:var(--primary);">Partido ${i+1}</h3>
-                    
-                    <div style="background: #eef2ff; padding: 10px; border-radius: 6px; font-size: 13px; margin-bottom: 8px; text-align:center;">
-                        <strong>🏆 Oficial:</strong> ${nEqA} ${llave.rGolesA !== "" ? llave.rGolesA : '-'} - ${llave.rGolesB !== "" ? llave.rGolesB : '-'} ${nEqB}
-                        <br><strong>Avanza/Campeón:</strong> ${nombreGanadorReal}
-                    </div>
-                    
-                    <div style="font-size: 13px; background: #fff; padding: 8px; border: 1px solid #ddd; border-radius: 6px; text-align:center;">
-                        <strong>👤 Pronóstico:</strong> ${nEqA} ${pred.pGolesA !== "" ? pred.pGolesA : '-'} - ${pred.pGolesB !== "" ? pred.pGolesB : '-'} ${nEqB}
-                        <br><strong>Avanza/Campeón:</strong> ${nombreGanadorPred}
-                        <hr style="border:0; border-top:1px dotted #ccc; margin:5px 0;">
-                        <span style="font-weight:bold; color:var(--primary); font-size:14px;">Puntos en este partido: ${pts} pts</span>
-                    </div>
-                </div>`;
-        });
-        
-        // Muestra de bonos para la auditoría después del ciclo
-        if (esFaseSemifinal && aciertosFinalistas > 0) {
-            if (aciertosFinalistas === 2) {
-                contenedorBonos.innerHTML = `<div style="display:inline-block; background:#fff8e1; color:#e65100; border:2px dashed #ffb300; padding:10px; border-radius:8px; font-weight:bold;">⭐ Ganó Bono de Semifinales (+3 Puntos) por predecir a los 2 finalistas correctos.</div>`;
-            } else if (aciertosFinalistas === 1) {
-                contenedorBonos.innerHTML = `<div style="display:inline-block; background:#fff8e1; color:#e65100; border:2px dashed #ffb300; padding:10px; border-radius:8px; font-weight:bold;">⭐ Ganó Bono de Semifinales (+1 Punto) por predecir a 1 finalista correcto.</div>`;
-            }
-        }
-
-        if (esFaseFinal && p.campeonProfetizado) {
-            let llavesFinal = datosApp.llaves.filter(l => (l.fase || '') === faseSeleccionada);
-            let ganoBonoFinal = false;
-            llavesFinal.forEach(l => {
-                if (l.rGanador !== "") {
-                    let ganadorRealStr = l.rGanador === 'A' ? l.eqA : l.eqB;
-                    if (ganadorRealStr === p.campeonProfetizado) ganoBonoFinal = true;
-                }
-            });
-            if (ganoBonoFinal) {
-                contenedorBonos.innerHTML = `<div style="display:inline-block; background:#fff8e1; color:#e65100; border:2px dashed #ffb300; padding:10px; border-radius:8px; font-weight:bold;">👑 Ganó Bono de Campeón Profeta (+3 Puntos). ¡Predijo a ${p.campeonProfetizado} desde Semifinales!</div>`;
-            }
-        }
-        
-        if ((esFaseSemifinal || esFaseFinal) && p.campeonProfetizado) {
-            contenedor.innerHTML += `
-                <div class="group-card" style="grid-column: 1 / -1; border: 2px solid #ffb300; background: #fff8e1; text-align:center;">
-                    <h3 style="color: #e65100; margin-top:0;">👑 Campeón Profetizado</h3>
-                    <p style="font-weight:bold; font-size:18px; color:#333; margin:0;">${p.campeonProfetizado}</p>
-                </div>`;
-        }
-
-        irAPestaña('panel-ver-predicciones-publico');
-    }
-
-    window.onload = descargarDatosDeLaNube;
+    // Arranca la app asegurándose de que el navegador esté listo
+    window.addEventListener("load", descargarDatosDeLaNube);
 </script>
-
 </body>
 </html>
