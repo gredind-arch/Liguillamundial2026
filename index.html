@@ -402,6 +402,13 @@
             const pred = (p.predicciones && p.predicciones[i]) ? p.predicciones[i] : { pGolesA: "-", pGolesB: "-", pGanador: "-" };
             const pts = calcularPuntosLlave(pred, llave);
             
+            // NUEVO: Lógica para mostrar quién avanza en caso de empate en el pronóstico
+            let infoDesempate = "";
+            if (pred.pGolesA !== "-" && pred.pGolesA === pred.pGolesB && pred.pGanador && pred.pGanador !== "-") {
+                let nombreAvanza = pred.pGanador === 'A' ? (llave.eqA || 'Local') : (llave.eqB || 'Visitante');
+                infoDesempate = `<br><span style="font-size: 13px; color: #d97706; font-weight: bold;">(Avanza: ${nombreAvanza})</span>`;
+            }
+            
             cont.innerHTML += `
                 <div class="group-card">
                     <h3 style="text-align:center; color:var(--primary); margin-top:0;">Partido ${i+1}</h3>
@@ -410,6 +417,7 @@
                     </div>
                     <div style="background: #fff; padding: 10px; border: 1px solid #ddd; border-radius: 6px; text-align:center;">
                         <strong>Su Pronóstico:</strong> <br> ${llave.eqA || 'Local'} [${pred.pGolesA}] - [${pred.pGolesB}] ${llave.eqB || 'Visitante'}
+                        ${infoDesempate}
                         <hr style="margin:5px 0;">
                         <span style="font-weight:bold; color:var(--primary);">Sumó: ${pts} pts</span>
                     </div>
