@@ -4,13 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- ETIQUETAS ANTI-CACHÉ: Obligan al celular a bajar la versión más nueva siempre -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     
     <title>Quiniela Mundial 2026 - Recta Final</title>
-    <!-- Librería para convertir HTML a Imagen -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
@@ -53,12 +51,21 @@
         .admin-lock-zone { text-align: center; margin-top: 40px; padding: 20px; border-top: 2px dashed #cbd5e1; width: 100%; max-width: 900px; box-sizing: border-box; }
         .admin-only { display: none; }
         
-        /* Estilos del Simulador */
         .simulador-box { background: #e0f2fe; border: 1px solid #38bdf8; border-radius: 10px; padding: 20px; margin-bottom: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .simulador-title { color: #0369a1; text-align: center; margin-top: 0; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .badge-exacto { display: inline-block; background: #16a34a; color: white; padding: 4px 10px; border-radius: 12px; font-size: 13px; font-weight: bold; margin: 3px; }
         .badge-parcial { display: inline-block; background: #d97706; color: white; padding: 4px 10px; border-radius: 12px; font-size: 13px; font-weight: bold; margin: 3px; }
         .team-label { width: 35%; font-weight: bold; font-size: 13px; color: #222; text-align: center; }
+
+        /* Estilos del Bracket de Bonus */
+        .bracket-container { background: white; padding: 15px; border-radius: 8px; border: 2px solid var(--primary); margin-bottom: 20px; }
+        .bracket-title { text-align: center; color: var(--primary); margin-top: 0; font-size: 18px; }
+        .bracket-row { display: flex; justify-content: space-around; align-items: center; margin-bottom: 15px; gap: 10px; flex-wrap: wrap; }
+        .bracket-match { display: flex; flex-direction: column; gap: 5px; background: #f8fafc; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; min-width: 120px; text-align: center; }
+        .bracket-btn { background: #e2e8f0; border: 2px solid transparent; padding: 8px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; transition: 0.2s; }
+        .bracket-btn.selected { background: var(--secondary); border-color: #d97706; color: black; }
+        .bracket-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .bracket-header { font-size: 12px; font-weight: bold; color: #64748b; text-transform: uppercase; margin-bottom: 5px; }
     </style>
 </head>
 <body>
@@ -69,21 +76,17 @@
     <div id="loading" style="background: #d97706; color: white; text-align: center; padding: 10px; font-weight: bold; border-radius: 6px; margin-bottom: 15px; display: none;">⏳ Cargando datos en vivo...</div>
     
     <div class="tabs">
-        <button id="btn-tab-posiciones" class="tab-btn active" onclick="irAPestaña('panel-posiciones')">📊 Tabla y Simulador</button>
+        <button id="btn-tab-posiciones" class="tab-btn active" onclick="irAPestaña('panel-posiciones')">📊 Tabla General</button>
         <button id="btn-tab-registro" class="tab-btn" onclick="irAPestaña('panel-registro')">📝 Mis Pronósticos</button>
-        <button id="btn-tab-resultados" class="tab-btn admin-only" onclick="irAPestaña('panel-resultados')">⚙️ Configurar Partidos</button>
+        <button id="btn-tab-resultados" class="tab-btn admin-only" onclick="irAPestaña('panel-resultados')">⚙️ Configurar Partidos y Bonus</button>
         <button id="btn-tab-usuarios" class="tab-btn admin-only" onclick="irAPestaña('panel-admin-usuarios')">👥 Usuarios</button>
     </div>
 
-    <!-- PANEL PRINCIPAL -->
     <div id="panel-posiciones" class="panel" style="display: block;">
         
-        <!-- ========================================== -->
-        <!-- SIMULADOR / FILTRO INTERACTIVO PÚBLICO     -->
-        <!-- ========================================== -->
         <div class="simulador-box">
-            <h3 class="simulador-title">🔍 Simulador en Vivo</h3>
-            <p style="font-size: 14px; text-align: center; color: #0284c7; margin-bottom: 15px; font-weight: 500;">Selecciona un partido, ingresa cómo va el marcador real y mira quiénes están ganando puntos al instante.</p>
+            <h3 class="simulador-title">🔍 Simulador de Partidos</h3>
+            <p style="font-size: 14px; text-align: center; color: #0284c7; margin-bottom: 15px; font-weight: 500;">Selecciona un partido, ingresa un marcador y mira quiénes están ganando puntos al instante.</p>
             
             <div style="display: flex; flex-direction: column; gap: 15px; align-items: center; background: white; padding: 15px; border-radius: 8px;">
                 <select id="simulador-select-partido" style="max-width: 500px; font-weight: bold; font-size: 15px;" onchange="ejecutarSimulador()"></select>
@@ -95,7 +98,7 @@
                 </div>
 
                 <div style="width: 100%; max-width: 300px;">
-                    <label style="font-size:12px; font-weight:bold; color:var(--primary); text-align:center; display:block; margin-bottom:5px;">🏆 Equipo que avanzaría (En caso de empate):</label>
+                    <label style="font-size:12px; font-weight:bold; color:var(--primary); text-align:center; display:block; margin-bottom:5px;">🏆 Equipo que avanzaría:</label>
                     <select id="simulador-ganador" onchange="ejecutarSimulador()">
                         <option value="">-- Se calcula por goles --</option>
                         <option value="A">Local</option>
@@ -103,10 +106,8 @@
                     </select>
                 </div>
             </div>
-
             <div id="simulador-resultados" style="margin-top: 15px; display: none;"></div>
         </div>
-        <!-- ========================================== -->
 
         <div style="background: #eef2ff; padding: 15px; border-radius: 8px; border: 1px solid #cbd5e1; text-align: center; margin-bottom: 15px;">
             <label style="font-weight:bold; color:var(--primary); font-size: 16px;">🏆 Tabla de Posiciones por Fase: </label>
@@ -128,36 +129,98 @@
         </table>
     </div>
 
-    <!-- PANEL AUDITORÍA PÚBLICA -->
     <div id="panel-ver-predicciones-publico" class="panel">
         <button class="btn-accion btn-back" onclick="irAPestaña('panel-posiciones')">⬅️ Volver a la Tabla</button>
         <h2>Pronósticos de: <span id="nombre-ver-publico" style="color:var(--primary);">[Nombre]</span></h2>
+        
+        <div id="desglose-puntos-auditoria" style="background: #fff3e0; border: 2px solid #ffb300; padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 20px; font-weight: bold;">
+        </div>
+
+        <h3 style="color:var(--primary); text-align:center;">🏆 Sus Selecciones de Bonus</h3>
+        <div id="grid-bonus-publico" style="background: white; border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+        </div>
+
+        <h3 style="color:var(--primary); text-align:center; margin-top:30px;">⚽ Sus Pronósticos de Partidos</h3>
         <div class="grid-grupos" id="grid-ver-publico"></div>
     </div>
 
-    <!-- PANEL DE REGISTRO -->
     <div id="panel-registro" class="panel">
         <h2>Ingresa tus Pronósticos</h2>
         <div style="background: #eef2ff; padding: 15px; border-radius: 8px; border: 1px solid #cbd5e1; margin-bottom: 20px;">
             <label style="font-weight: bold; display: block; margin-bottom: 5px; color: var(--primary);">👤 Tu Nombre Completo:</label>
-            <input type="text" id="usuario-nombre-registro" placeholder="Ej. Juan Pérez">
+            <input type="text" id="usuario-nombre-registro" placeholder="Ej. Juan Pérez" oninput="cargarPrediccionesSiExisten()">
         </div>
+
+        <div class="bracket-container">
+            <h3 class="bracket-title" id="titulo-llave-bonus">🏆 Llave de Predicciones (Bonus)</h3>
+            <p style="text-align: center; font-size: 13px; color: #555;">Toca los equipos para definir su camino hasta la final. (Semis: 1 pt por acierto, 5 pts por los cuatro. Final: 3 pts por equipo. Campeón: 5 pts).</p>
+            
+            <div class="bracket-header" style="text-align:center; margin-top:20px;">1. Elige tus Semifinalistas</div>
+            <div class="bracket-row" id="ui-qf-row">
+                </div>
+
+            <div class="bracket-header" style="text-align:center; margin-top:15px;">2. Elige tus Finalistas</div>
+            <div class="bracket-row" id="ui-sf-row">
+                </div>
+
+            <div class="bracket-header" style="text-align:center; margin-top:15px;">3. Elige al Campeón</div>
+            <div class="bracket-row" id="ui-fin-row">
+                </div>
+        </div>
+
+        <h3 style="text-align: center; color: var(--primary); margin-top: 30px;">⚽ Marcadores 90 Minutos</h3>
         <div class="grid-grupos" id="grid-registro-publico"></div>
-        <button class="btn-accion" id="btn-guardar-pronosticos" onclick="guardarPrediccionesUsuarioComun()">💾 Guardar Predicciones</button>
+        
+        <button class="btn-accion" id="btn-guardar-pronosticos" onclick="guardarPrediccionesUsuarioComun()">💾 Guardar Todo (Bonus + Partidos)</button>
     </div>
 
-    <!-- PANEL ADMIN RESULTADOS -->
     <div id="panel-resultados" class="panel">
-        <h2>Configurar Partidos y Marcadores Reales</h2>
-        <div style="text-align:center; margin-bottom: 15px;">
+        <h2>Configuración Global</h2>
+        
+        <div class="bracket-container" style="border-color: #c62828;">
+            <h3 class="bracket-title" style="color: #c62828;">⚙️ Establecer Ganadores Reales (Bonus)</h3>
+            <p style="text-align: center; font-size: 13px;">Llena esto conforme termine el torneo para repartir los puntos de bonus a los participantes.</p>
+            
+            <div style="text-align: center; margin-bottom: 15px; padding: 10px; background: #ffebee; border-radius: 8px;">
+                <label style="font-weight: bold; cursor: pointer; color: #c62828; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <input type="checkbox" id="chk-bloquear-bonus" onchange="toggleBloqueoBonus()" style="width: 20px; height: 20px; cursor: pointer;">
+                    🔒 Bloquear Predicciones de Bonus para Usuarios
+                </label>
+            </div>
+
+            <div class="bracket-row">
+                <div class="bracket-match" style="width: 100%;">
+                    <div class="bracket-header">4 Semifinalistas Reales:</div>
+                    <input type="text" id="adm-real-sf1" placeholder="Ganador QF1 (Francia/Marruecos)">
+                    <input type="text" id="adm-real-sf2" placeholder="Ganador QF2 (España/Bélgica)">
+                    <input type="text" id="adm-real-sf3" placeholder="Ganador QF3 (Noruega/Inglaterra)">
+                    <input type="text" id="adm-real-sf4" placeholder="Ganador QF4 (Argentina/Suiza)">
+                </div>
+            </div>
+            <div class="bracket-row">
+                <div class="bracket-match" style="width: 100%;">
+                    <div class="bracket-header">2 Finalistas Reales:</div>
+                    <input type="text" id="adm-real-f1" placeholder="Finalista 1">
+                    <input type="text" id="adm-real-f2" placeholder="Finalista 2">
+                </div>
+            </div>
+            <div class="bracket-row">
+                <div class="bracket-match" style="width: 100%;">
+                    <div class="bracket-header">Campeón Real:</div>
+                    <input type="text" id="adm-real-campeon" placeholder="Campeón del Mundo">
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align:center; margin-bottom: 15px; margin-top: 30px;">
+            <h3 style="color: var(--primary);">⚙️ Configurar Partidos</h3>
             <button class="btn-accion" style="width:auto; display:inline-block; background:#2e7d32; color:white;" onclick="agregarPartidoAdmin()">➕ Agregar Partido</button>
             <button class="btn-accion" style="width:auto; display:inline-block; background:#c62828; color:white;" onclick="eliminarPartidoAdmin()">➖ Borrar Último</button>
         </div>
         <div class="grid-grupos" id="grid-resultados-reales"></div>
-        <button class="btn-accion" onclick="guardarResultadosReales()" style="margin-top: 30px;">💾 Guardar Marcadores</button>
+        <button class="btn-accion" onclick="guardarResultadosReales()" style="margin-top: 30px;">💾 Guardar Marcadores y Bonus Reales</button>
     </div>
 
-    <!-- PANEL ADMIN USUARIOS -->
     <div id="panel-admin-usuarios" class="panel">
         <h2>Gestión de Participantes</h2>
         <div style="background: #fff3e0; border: 2px solid #ffb300; padding: 15px; border-radius: 10px; margin-bottom: 25px; text-align: center;">
@@ -188,20 +251,33 @@
 <script>
     const CONTRASEÑA_MAESTRA = "pajilla123"; 
     const ENDPOINT_NUBE = "https://kvdb.io/M7g1jxKHWEg4HC4Jy9nMs8/datos_quiniela_eliminatorias";
-    let datosApp = { participantes: [], llaves: [], registroOculto: false };
+    let datosApp = { 
+        participantes: [], 
+        llaves: [], 
+        resultadosBonus: { sf1:"", sf2:"", sf3:"", sf4:"", f1:"", f2:"", campeon:"" },
+        registroOculto: false,
+        bonusBloqueado: false // Agregada la variable del bloqueo
+    };
 
-    // FUNCIÓN MEJORADA: Defensa contra datos corruptos que causan pantalla blanca
+    let userBonus = { sf1:"", sf2:"", sf3:"", sf4:"", f1:"", f2:"", campeon:"" };
+    const bracketBase = [
+        ["Francia", "Morocco"],     
+        ["España", "Bélgica"],      
+        ["Noruega", "Inglaterra"],  
+        ["Argentina", "Suiza"]      
+    ];
+
     function inicializarEstructura() {
-        if (!datosApp || typeof datosApp !== 'object') {
-            datosApp = { participantes: [], llaves: [], registroOculto: false };
-        }
+        if (!datosApp || typeof datosApp !== 'object') datosApp = { participantes: [], llaves: [], registroOculto: false, bonusBloqueado: false };
         if (!datosApp.participantes) datosApp.participantes = [];
+        if (!datosApp.resultadosBonus) datosApp.resultadosBonus = { sf1:"", sf2:"", sf3:"", sf4:"", f1:"", f2:"", campeon:"" };
         if (!datosApp.llaves || !Array.isArray(datosApp.llaves) || datosApp.llaves.length === 0) {
             datosApp.llaves = Array.from({length: 16}, (_, i) => ({
-                id: i, eqA: "", eqB: "", rGolesA: "", rGolesB: "", rGanador: "", bloqueado: false, fase: "16avos de Final"
+                id: i, eqA: "", eqB: "", rGolesA: "", rGolesB: "", rGanador: "", bloqueado: false, fase: "Fase de Grupos"
             }));
         }
         if (typeof datosApp.registroOculto === 'undefined') datosApp.registroOculto = false;
+        if (typeof datosApp.bonusBloqueado === 'undefined') datosApp.bonusBloqueado = false; // Nos aseguramos de que exista
     }
 
     function mostrarCargando(v) { document.getElementById('loading').style.display = v ? 'block' : 'none'; }
@@ -209,10 +285,8 @@
     async function descargarDatosDeLaNube() {
         mostrarCargando(true);
         try {
-            // Se fuerza aún más la omisión de caché agregando un número aleatorio
             let urlSinCache = ENDPOINT_NUBE + "?t=" + Date.now() + Math.random();
             let res = await fetch(urlSinCache, { cache: 'no-store' });
-            
             if (res.ok) {
                 let text = await res.text();
                 if (text && text.trim() !== "") {
@@ -220,15 +294,11 @@
                     if (json) datosApp = json;
                 }
             }
-        } catch (e) {
-            console.error("Error cargando base de datos:", e);
-        }
+        } catch (e) { console.error("Error:", e); }
         
-        // Esta línea previene la pantalla en blanco armando todo si falló la carga
         inicializarEstructura();
         mostrarCargando(false);
         
-        // Inicializar vistas principales
         poblarSelectSimulador();
         calcularYMostrarTabla();
         document.getElementById('btn-tab-registro').style.display = datosApp.registroOculto ? 'none' : 'inline-block';
@@ -238,10 +308,15 @@
         mostrarCargando(true);
         try {
             await fetch(ENDPOINT_NUBE, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(datosApp) });
-        } catch(e) {
-            alert("Error al guardar en la base de datos.");
-        }
+        } catch(e) { alert("Error al guardar en la base de datos."); }
         mostrarCargando(false);
+    }
+
+    // NUEVA FUNCIÓN PARA EL CANDADO DEL BONUS
+    async function toggleBloqueoBonus() {
+        datosApp.bonusBloqueado = document.getElementById('chk-bloquear-bonus').checked;
+        await subirDatosALaNube();
+        renderBracketUI(); // Actualiza visualmente si estás en esa pestaña
     }
 
     function irAPestaña(panelId) {
@@ -250,140 +325,220 @@
         document.getElementById(panelId).style.display = 'block';
         
         if (panelId === 'panel-posiciones') { document.getElementById('btn-tab-posiciones').classList.add('active'); poblarSelectSimulador(); calcularYMostrarTabla(); }
-        if (panelId === 'panel-registro') { document.getElementById('btn-tab-registro').classList.add('active'); generarCamposFormularioPublico(); }
+        if (panelId === 'panel-registro') { 
+            document.getElementById('btn-tab-registro').classList.add('active'); 
+            generarCamposFormularioPublico();
+            renderBracketUI(); 
+        }
         if (panelId === 'panel-resultados') { document.getElementById('btn-tab-resultados').classList.add('active'); generarCamposResultadosReales(); }
         if (panelId === 'panel-admin-usuarios') { document.getElementById('btn-tab-usuarios').classList.add('active'); document.getElementById('chk-ocultar-registro').checked = datosApp.registroOculto; generarTablaGestionUsuarios(); }
     }
 
-    function poblarSelectSimulador() {
-        const select = document.getElementById('simulador-select-partido');
-        if(!select) return;
-        let opciones = `<option value="">-- Toca aquí para elegir un Partido --</option>`;
-        datosApp.llaves.forEach((llave, i) => {
-            if(!llave.bloqueado) {
-                let eqA = llave.eqA || `Local (P${i+1})`;
-                let eqB = llave.eqB || `Visitante (P${i+1})`;
-                let fase = llave.fase || "Fase";
-                opciones += `<option value="${i}">[${fase}] ${eqA} vs ${eqB}</option>`;
-            }
-        });
-        select.innerHTML = opciones;
+    function selectTeamBonus(fase, value, matchId) {
+        if (datosApp.bonusBloqueado) return; // Si está bloqueado, no hace nada al hacer click
+
+        if (fase === 'sf') {
+            userBonus[`sf${matchId}`] = value;
+            if (matchId === 1 || matchId === 2) userBonus.f1 = "";
+            if (matchId === 3 || matchId === 4) userBonus.f2 = "";
+            userBonus.campeon = "";
+        } else if (fase === 'f') {
+            userBonus[`f${matchId}`] = value;
+            userBonus.campeon = ""; 
+        } else if (fase === 'c') {
+            userBonus.campeon = value;
+        }
+        renderBracketUI();
     }
 
-    function ejecutarSimulador() {
-        const index = document.getElementById('simulador-select-partido').value;
-        const resDiv = document.getElementById('simulador-resultados');
+    function renderBracketUI() {
+        // Revisamos si el bonus está bloqueado
+        let isBloqueado = datosApp.bonusBloqueado;
         
-        if (index === "") { resDiv.style.display = 'none'; return; }
-
-        const llave = datosApp.llaves[index];
-        const eqA = llave.eqA || "Local";
-        const eqB = llave.eqB || "Visitante";
-        
-        let gA = document.getElementById('simulador-goles-a').value;
-        let gB = document.getElementById('simulador-goles-b').value;
-        let selectorGanador = document.getElementById('simulador-ganador');
-
-        selectorGanador.options[1].text = eqA;
-        selectorGanador.options[2].text = eqB;
-
-        if (gA === "" || gB === "") { resDiv.style.display = 'none'; return; }
-
-        let nA = parseInt(gA);
-        let nB = parseInt(gB);
-        
-        if (nA > nB) selectorGanador.value = "A";
-        else if (nA < nB) selectorGanador.value = "B";
-
-        let ganador = selectorGanador.value;
-        if (ganador === "") {
-            resDiv.style.display = 'block';
-            resDiv.innerHTML = `<div style="text-align:center; color:#d97706; font-weight:bold; padding:10px; background:white; border-radius:8px;">⚖️ Empate detectado. Selecciona manualmente quién ganaría.</div>`;
-            return;
+        // Cambiamos el título si está bloqueado
+        const tituloLlave = document.getElementById('titulo-llave-bonus');
+        if (isBloqueado) {
+            tituloLlave.innerHTML = '🏆 Llave de Predicciones (Bonus) <span style="color: #c62828; font-size: 14px; display: block; margin-top: 5px;">[🔒 SECCIÓN CERRADA]</span>';
+        } else {
+            tituloLlave.innerHTML = '🏆 Llave de Predicciones (Bonus)';
         }
 
-        let aciertosExactos = [];
-        let aciertosGanador = [];
-
-        datosApp.participantes.forEach(p => {
-            if(!p.predicciones) return;
-            let pred = p.predicciones[index];
-            if (pred) {
-                let pA = parseInt(pred.pGolesA);
-                let pB = parseInt(pred.pGolesB);
-                let pGan = pred.pGanador;
-
-                let aciertaGanador = (pGan === ganador);
-                let aciertaMarcador = (pA === nA && pB === nB);
-
-                if (aciertaGanador && aciertaMarcador) aciertosExactos.push(p.nombre);
-                else if (aciertaGanador || aciertaMarcador) aciertosGanador.push(p.nombre);
-            }
-        });
-
-        resDiv.style.display = 'block';
-        
-        let htmlExactos = aciertosExactos.length > 0 
-            ? aciertosExactos.map(n => `<span class="badge-exacto">${n}</span>`).join('')
-            : `<span style="font-size:13px; color:#94a3b8; font-style:italic;">Nadie pegándole al exacto...</span>`;
+        let htmlQF = '';
+        bracketBase.forEach((match, idx) => {
+            let id = idx + 1;
+            let sel = userBonus[`sf${id}`];
+            let attrLock = isBloqueado ? 'disabled' : ''; // Aplica el bloqueo visual a los botones
             
-        let htmlParciales = aciertosGanador.length > 0 
-            ? aciertosGanador.map(n => `<span class="badge-parcial">${n}</span>`).join('')
-            : `<span style="font-size:13px; color:#94a3b8; font-style:italic;">Nadie acertando al ganador...</span>`;
+            htmlQF += `<div class="bracket-match">
+                <button type="button" class="bracket-btn ${sel === match[0] ? 'selected' : ''}" ${attrLock} onclick="selectTeamBonus('sf', '${match[0]}', ${id})">${match[0]}</button>
+                <span style="font-size:10px; color:#999;">vs</span>
+                <button type="button" class="bracket-btn ${sel === match[1] ? 'selected' : ''}" ${attrLock} onclick="selectTeamBonus('sf', '${match[1]}', ${id})">${match[1]}</button>
+            </div>`;
+        });
+        document.getElementById('ui-qf-row').innerHTML = htmlQF;
 
-        resDiv.innerHTML = `
-            <div style="background: white; padding: 15px; border-radius: 8px; border-left: 5px solid #16a34a; margin-bottom: 10px;">
-                <strong style="color:#16a34a; font-size:15px; display:block; margin-bottom:8px;">🎯 Le atinan al Marcador Exacto (+3 pts):</strong>
-                <div>${htmlExactos}</div>
-            </div>
-            <div style="background: white; padding: 15px; border-radius: 8px; border-left: 5px solid #d97706;">
-                <strong style="color:#d97706; font-size:15px; display:block; margin-bottom:8px;">✅ Acertando solo quién avanza (+1 pt):</strong>
-                <div>${htmlParciales}</div>
-            </div>
-        `;
+        let htmlSF = '';
+        let sf1 = userBonus.sf1, sf2 = userBonus.sf2, sf3 = userBonus.sf3, sf4 = userBonus.sf4;
+        let f1Sel = userBonus.f1, f2Sel = userBonus.f2;
+
+        htmlSF += `<div class="bracket-match">
+            <button type="button" class="bracket-btn ${f1Sel === sf1 && sf1 ? 'selected' : ''}" ${(!sf1 || isBloqueado) ? 'disabled' : ''} onclick="selectTeamBonus('f', '${sf1}', 1)">${sf1 || 'Ganador QF1'}</button>
+            <span style="font-size:10px; color:#999;">vs</span>
+            <button type="button" class="bracket-btn ${f1Sel === sf2 && sf2 ? 'selected' : ''}" ${(!sf2 || isBloqueado) ? 'disabled' : ''} onclick="selectTeamBonus('f', '${sf2}', 1)">${sf2 || 'Ganador QF2'}</button>
+        </div>`;
+        
+        htmlSF += `<div class="bracket-match">
+            <button type="button" class="bracket-btn ${f2Sel === sf3 && sf3 ? 'selected' : ''}" ${(!sf3 || isBloqueado) ? 'disabled' : ''} onclick="selectTeamBonus('f', '${sf3}', 2)">${sf3 || 'Ganador QF3'}</button>
+            <span style="font-size:10px; color:#999;">vs</span>
+            <button type="button" class="bracket-btn ${f2Sel === sf4 && sf4 ? 'selected' : ''}" ${(!sf4 || isBloqueado) ? 'disabled' : ''} onclick="selectTeamBonus('f', '${sf4}', 2)">${sf4 || 'Ganador QF4'}</button>
+        </div>`;
+        document.getElementById('ui-sf-row').innerHTML = htmlSF;
+
+        let htmlFin = '';
+        let f1 = userBonus.f1, f2 = userBonus.f2;
+        let cSel = userBonus.campeon;
+
+        htmlFin += `<div class="bracket-match" style="border-color:var(--secondary); border-width:2px;">
+            <button type="button" class="bracket-btn ${cSel === f1 && f1 ? 'selected' : ''}" ${(!f1 || isBloqueado) ? 'disabled' : ''} onclick="selectTeamBonus('c', '${f1}', 0)">${f1 || 'Finalista 1'}</button>
+            <span style="font-size:10px; color:#999;">🏆</span>
+            <button type="button" class="bracket-btn ${cSel === f2 && f2 ? 'selected' : ''}" ${(!f2 || isBloqueado) ? 'disabled' : ''} onclick="selectTeamBonus('c', '${f2}', 0)">${f2 || 'Finalista 2'}</button>
+        </div>`;
+        document.getElementById('ui-fin-row').innerHTML = htmlFin;
     }
 
+    function cargarPrediccionesSiExisten() {
+        let nombre = document.getElementById('usuario-nombre-registro').value.trim();
+        let p = datosApp.participantes.find(x => x.nombre.toLowerCase() === nombre.toLowerCase());
+        if (p && p.bonus) {
+            userBonus = { ...p.bonus };
+        } else {
+            userBonus = { sf1:"", sf2:"", sf3:"", sf4:"", f1:"", f2:"", campeon:"" };
+        }
+        renderBracketUI();
+        if(p && p.predicciones) {
+            datosApp.llaves.forEach((l, i) => {
+                if(!l.bloqueado && p.predicciones[i]) {
+                    if(document.getElementById(`public-golesA-${i}`)) document.getElementById(`public-golesA-${i}`).value = p.predicciones[i].pGolesA;
+                    if(document.getElementById(`public-golesB-${i}`)) document.getElementById(`public-golesB-${i}`).value = p.predicciones[i].pGolesB;
+                    if(document.getElementById(`public-ganador-${i}`)) document.getElementById(`public-ganador-${i}`).value = p.predicciones[i].pGanador;
+                }
+            });
+        } else {
+            datosApp.llaves.forEach((l, i) => {
+                if(!l.bloqueado) {
+                    if(document.getElementById(`public-golesA-${i}`)) document.getElementById(`public-golesA-${i}`).value = "";
+                    if(document.getElementById(`public-golesB-${i}`)) document.getElementById(`public-golesB-${i}`).value = "";
+                    if(document.getElementById(`public-ganador-${i}`)) document.getElementById(`public-ganador-${i}`).value = "";
+                }
+            });
+        }
+    }
+
+    // --- NUEVA LÓGICA DE PUNTUACIÓN REVISADA ---
     function calcularPuntosLlave(pred, llave) {
-        if (!pred || !pred.pGanador || llave.rGolesA === "" || llave.rGolesB === "" || !llave.rGanador) return 0;
-        let aciertaClasificado = (pred.pGanador === llave.rGanador);
-        let aciertaMarcador = (parseInt(pred.pGolesA) === parseInt(llave.rGolesA) && parseInt(pred.pGolesB) === parseInt(llave.rGolesB));
+        if (!pred || llave.rGolesA === "" || llave.rGolesB === "") return 0;
         
-        if (aciertaClasificado && aciertaMarcador) return 3;
+        let pA = parseInt(pred.pGolesA), pB = parseInt(pred.pGolesB);
+        let rA = parseInt(llave.rGolesA), rB = parseInt(llave.rGolesB);
+
+        if (isNaN(pA) || isNaN(pB) || isNaN(rA) || isNaN(rB)) return 0;
+
+        let aciertaMarcador = (pA === rA && pB === rB);
+
+        // Deduce el ganador basado en los goles si nadie usó el dropdown (ideal para los 90 min)
+        let realGanador = llave.rGanador || (rA > rB ? 'A' : (rB > rA ? 'B' : ''));
+        let predGanador = pred.pGanador || (pA > pB ? 'A' : (pB > pA ? 'B' : ''));
+
+        let aciertaClasificado = false;
+        // Solo comprueba si se pudo deducir o seleccionar un ganador de ambos lados
+        if (realGanador !== '' && predGanador !== '') {
+            aciertaClasificado = (realGanador === predGanador);
+        }
+
+        if (aciertaMarcador && aciertaClasificado) return 3;
         else if (aciertaClasificado || aciertaMarcador) return 1;
         return 0;
+    }
+
+    // --- NUEVO SISTEMA DE AUDITORÍA DETALLADA ---
+    function obtenerRazonPuntos(pred, llave) {
+        if (!pred || llave.rGolesA === "" || llave.rGolesB === "") return "<span style='color:#666;'>No hay datos suficientes para evaluar.</span>";
+        
+        let pA = parseInt(pred.pGolesA), pB = parseInt(pred.pGolesB);
+        let rA = parseInt(llave.rGolesA), rB = parseInt(llave.rGolesB);
+
+        let aciertaMarcador = (pA === rA && pB === rB);
+        let realGanador = llave.rGanador || (rA > rB ? 'A' : (rB > rA ? 'B' : ''));
+        let predGanador = pred.pGanador || (pA > pB ? 'A' : (pB > pA ? 'B' : ''));
+        
+        let aciertaClasificado = false;
+        if (realGanador !== '' && predGanador !== '') {
+            aciertaClasificado = (realGanador === predGanador);
+        }
+
+        if (aciertaMarcador && aciertaClasificado) return "<span style='color:#16a34a; font-weight:bold;'>✅ +3 pts: Marcador exacto y equipo clasificado correctos.</span>";
+        else if (aciertaMarcador) return "<span style='color:#d97706; font-weight:bold;'>⚠️ +1 pt: Marcador exacto (pero falló el equipo que avanzaba en penales).</span>";
+        else if (aciertaClasificado) return "<span style='color:#d97706; font-weight:bold;'>✅ +1 pt: Acertó el equipo clasificado (marcador incorrecto).</span>";
+        
+        return "<span style='color:#c62828; font-weight:bold;'>❌ 0 pts: No acertó el marcador ni el equipo clasificado.</span>";
+    }
+
+    function calcularPuntosBonus(pBonus) {
+        if(!pBonus) return 0;
+        let pts = 0;
+        let r = datosApp.resultadosBonus;
+        
+        let aciertosSemis = 0;
+        if(pBonus.sf1 && r.sf1 && pBonus.sf1.toLowerCase() === r.sf1.toLowerCase()) aciertosSemis++;
+        if(pBonus.sf2 && r.sf2 && pBonus.sf2.toLowerCase() === r.sf2.toLowerCase()) aciertosSemis++;
+        if(pBonus.sf3 && r.sf3 && pBonus.sf3.toLowerCase() === r.sf3.toLowerCase()) aciertosSemis++;
+        if(pBonus.sf4 && r.sf4 && pBonus.sf4.toLowerCase() === r.sf4.toLowerCase()) aciertosSemis++;
+        
+        if (aciertosSemis === 1) pts += 1;
+        else if (aciertosSemis === 2) pts += 2;
+        else if (aciertosSemis === 3) pts += 3;
+        else if (aciertosSemis === 4) pts += 5;
+
+        if(pBonus.f1 && r.f1 && pBonus.f1.toLowerCase() === r.f1.toLowerCase()) pts += 3;
+        if(pBonus.f2 && r.f2 && pBonus.f2.toLowerCase() === r.f2.toLowerCase()) pts += 3;
+        if(pBonus.campeon && r.campeon && pBonus.campeon.toLowerCase() === r.campeon.toLowerCase()) pts += 5;
+
+        return pts;
     }
 
     function calcularYMostrarTabla() {
         let selectFase = document.getElementById('select-fase-posiciones');
         if (!selectFase) return;
         
-        let fasesUnicas = [...new Set(datosApp.llaves.map(l => l.fase || '16avos de Final'))];
-        if (fasesUnicas.length === 0) return;
-
+        let fasesUnicas = [...new Set(datosApp.llaves.map(l => l.fase || 'Fase'))];
+        fasesUnicas.unshift("⭐ GLOBAL (Partidos + Bonus)"); 
+        
         let seleccionActual = selectFase.value;
         selectFase.innerHTML = fasesUnicas.map(f => `<option value="${f}">${f}</option>`).join('');
-        selectFase.value = fasesUnicas.includes(seleccionActual) ? seleccionActual : fasesUnicas[fasesUnicas.length - 1]; 
+        selectFase.value = fasesUnicas.includes(seleccionActual) ? seleccionActual : fasesUnicas[0]; 
         let faseSeleccionada = selectFase.value;
 
         let resultados = datosApp.participantes.map(p => {
-            let total = 0;
+            let ptsPartidos = 0;
             if(p.predicciones) {
                 datosApp.llaves.forEach((llave, i) => {
-                    if ((llave.fase || '16avos de Final') === faseSeleccionada && p.predicciones[i]) {
-                        total += calcularPuntosLlave(p.predicciones[i], llave);
+                    if (faseSeleccionada === "⭐ GLOBAL (Partidos + Bonus)" || (llave.fase || 'Fase') === faseSeleccionada) {
+                        if(p.predicciones[i]) ptsPartidos += calcularPuntosLlave(p.predicciones[i], llave);
                     }
                 });
             }
-            return { id: p.id, nombre: p.nombre, puntosTotales: total };
+            let ptsBonus = (faseSeleccionada === "⭐ GLOBAL (Partidos + Bonus)") ? calcularPuntosBonus(p.bonus) : 0;
+            
+            return { id: p.id, nombre: p.nombre, ptsPartidos: ptsPartidos, ptsBonus: ptsBonus, total: ptsPartidos + ptsBonus };
         });
         
-        resultados.sort((a, b) => b.puntosTotales - a.puntosTotales);
+        resultados.sort((a, b) => b.total - a.total);
         const tbody = document.getElementById('tabla-posiciones-body');
         tbody.innerHTML = resultados.length === 0 ? `<tr><td colspan="4">Sin usuarios registrados.</td></tr>` : resultados.map((r, idx) => `
             <tr>
                 <td><strong>${idx + 1}º</strong></td>
                 <td style="text-align: left;">${r.nombre}</td>
-                <td class="puntos-total">${r.puntosTotales} pts</td>
+                <td class="puntos-total">${r.total} pts</td>
                 <td><button class="btn-ver-publico" onclick="verPrediccionesPublicas(${r.id})">👁️ Ver</button></td>
             </tr>`).join('');
     }
@@ -394,15 +549,36 @@
         let faseSel = document.getElementById('select-fase-posiciones').value;
         document.getElementById('nombre-ver-publico').innerText = p.nombre;
         
+        let ptsPartidos = 0;
+        if(p.predicciones) {
+            datosApp.llaves.forEach((llave, i) => {
+                if(p.predicciones[i]) ptsPartidos += calcularPuntosLlave(p.predicciones[i], llave);
+            });
+        }
+        let ptsBonus = calcularPuntosBonus(p.bonus);
+
+        document.getElementById('desglose-puntos-auditoria').innerHTML = `
+            Puntos Partidos (90min): <span style="color:#2e7d32; font-size:18px;">${ptsPartidos}</span> | 
+            Puntos Bonus: <span style="color:#d97706; font-size:18px;">${ptsBonus}</span><br>
+            <span style="font-size:22px; color:var(--primary); display:block; margin-top:5px;">TOTAL: ${ptsPartidos + ptsBonus} pts</span>
+        `;
+
+        let rB = p.bonus || {};
+        document.getElementById('grid-bonus-publico').innerHTML = `
+            <div style="margin-bottom:10px;"><strong>Semis Elegidas:</strong> ${rB.sf1||'-'}, ${rB.sf2||'-'}, ${rB.sf3||'-'}, ${rB.sf4||'-'}</div>
+            <div style="margin-bottom:10px;"><strong>Finalistas:</strong> ${rB.f1||'-'} vs ${rB.f2||'-'}</div>
+            <div style="font-size:16px; color:#c62828;"><strong>Campeón:</strong> 🏆 ${rB.campeon||'-'}</div>
+        `;
+        
         const cont = document.getElementById('grid-ver-publico');
         cont.innerHTML = '';
-        
         datosApp.llaves.forEach((llave, i) => {
-            if ((llave.fase || '16avos de Final') !== faseSel) return; 
+            if (faseSel !== "⭐ GLOBAL (Partidos + Bonus)" && (llave.fase || 'Fase') !== faseSel) return; 
             const pred = (p.predicciones && p.predicciones[i]) ? p.predicciones[i] : { pGolesA: "-", pGolesB: "-", pGanador: "-" };
-            const pts = calcularPuntosLlave(pred, llave);
             
-            // NUEVO: Lógica para mostrar quién avanza en caso de empate en el pronóstico
+            const pts = calcularPuntosLlave(pred, llave);
+            const razonHTML = obtenerRazonPuntos(pred, llave); // Se llama al nuevo sistema de auditoría
+
             let infoDesempate = "";
             if (pred.pGolesA !== "-" && pred.pGolesA === pred.pGolesB && pred.pGanador && pred.pGanador !== "-") {
                 let nombreAvanza = pred.pGanador === 'A' ? (llave.eqA || 'Local') : (llave.eqB || 'Visitante');
@@ -419,7 +595,10 @@
                         <strong>Su Pronóstico:</strong> <br> ${llave.eqA || 'Local'} [${pred.pGolesA}] - [${pred.pGolesB}] ${llave.eqB || 'Visitante'}
                         ${infoDesempate}
                         <hr style="margin:5px 0;">
-                        <span style="font-weight:bold; color:var(--primary);">Sumó: ${pts} pts</span>
+                        <span style="font-weight:bold; color:var(--primary); font-size:16px;">Sumó: ${pts} pts</span><br>
+                        <div style="margin-top: 6px; font-size: 13px; background: #f8fafc; padding: 5px; border-radius: 4px; border: 1px solid #e2e8f0;">
+                            ${razonHTML}
+                        </div>
                     </div>
                 </div>`;
         });
@@ -445,35 +624,45 @@
                         <span class="team-label">${llave.eqB || "Visitante"}</span>
                     </div>
                     <select id="public-ganador-${i}" style="margin-top:10px;">
-                        <option value="">-- ¿Quién Avanza? --</option>
+                        <option value="">-- ¿Quién Avanza en caso de empate? --</option>
                         <option value="A">${llave.eqA || "Local"}</option>
                         <option value="B">${llave.eqB || "Visitante"}</option>
                     </select>
                 </div>`;
         });
-        document.getElementById('btn-guardar-pronosticos').style.display = abiertos > 0 ? 'block' : 'none';
-        if(abiertos === 0) contenedor.innerHTML = `<div style="text-align:center; padding:20px; width:100%;">No hay partidos disponibles para pronosticar.</div>`;
+        document.getElementById('btn-guardar-pronosticos').style.display = 'block';
     }
 
     async function guardarPrediccionesUsuarioComun() {
         let nombre = document.getElementById('usuario-nombre-registro').value.trim();
-        if (!nombre) return alert("⚠️ Ingresa tu nombre.");
+        if (!nombre) return alert("⚠️ Ingresa tu nombre arriba.");
+        
+        // Solo exige llenar el Bonus si NO está bloqueado
+        if (!datosApp.bonusBloqueado) {
+            if (!userBonus.sf1 || !userBonus.sf2 || !userBonus.sf3 || !userBonus.sf4) return alert("⚠️ Selecciona los 4 semifinalistas en la Llave de Bonus.");
+            if (!userBonus.f1 || !userBonus.f2) return alert("⚠️ Selecciona los 2 finalistas en la Llave de Bonus.");
+            if (!userBonus.campeon) return alert("⚠️ Selecciona al Campeón en la Llave de Bonus.");
+        }
 
         let nuevasPreds = [];
         for (let i = 0; i < datosApp.llaves.length; i++) {
-            if (datosApp.llaves[i].bloqueado) continue; 
-            let gA = document.getElementById(`public-golesA-${i}`).value;
-            let gB = document.getElementById(`public-golesB-${i}`).value;
-            let gan = document.getElementById(`public-ganador-${i}`).value;
-            if (gA === "" || gB === "" || gan === "") return alert(`⚠️ Faltan datos en el Partido ${i + 1}.`);
-            nuevasPreds[i] = { pGolesA: gA, pGolesB: gB, pGanador: gan };
+            if (datosApp.llaves[i].bloqueado) {
+                let p = datosApp.participantes.find(x => x.nombre.toLowerCase() === nombre.toLowerCase());
+                if(p && p.predicciones && p.predicciones[i]) nuevasPreds[i] = p.predicciones[i];
+                continue; 
+            }
+            let gA = document.getElementById(`public-golesA-${i}`) ? document.getElementById(`public-golesA-${i}`).value : "";
+            let gB = document.getElementById(`public-golesB-${i}`) ? document.getElementById(`public-golesB-${i}`).value : "";
+            let gan = document.getElementById(`public-ganador-${i}`) ? document.getElementById(`public-ganador-${i}`).value : "";
+            if (gA !== "" && gB !== "") nuevasPreds[i] = { pGolesA: gA, pGolesB: gB, pGanador: gan };
         }
 
         let idx = datosApp.participantes.findIndex(p => p.nombre.toLowerCase() === nombre.toLowerCase());
         if (idx === -1) {
-            datosApp.participantes.push({ id: Date.now(), nombre: nombre, predicciones: nuevasPreds });
+            datosApp.participantes.push({ id: Date.now(), nombre: nombre, predicciones: nuevasPreds, bonus: {...userBonus} });
         } else {
             datosApp.participantes[idx].predicciones = nuevasPreds;
+            datosApp.participantes[idx].bonus = {...userBonus};
         }
 
         await subirDatosALaNube();
@@ -481,17 +670,21 @@
         irAPestaña('panel-posiciones');
     }
 
-    function loguearAdmin() {
-        if (document.getElementById('pass-admin').value === CONTRASEÑA_MAESTRA) {
-            document.querySelectorAll('.admin-only').forEach(e => e.style.display = 'inline-block');
-            document.getElementById('login-admin-box').style.display = 'none';
-            document.getElementById('logout-admin-box').style.display = 'block';
-        } else alert("❌ Error");
-    }
-    
-    function cerrarAdmin() { location.reload(); }
-
     function generarCamposResultadosReales() {
+        let rb = datosApp.resultadosBonus;
+        document.getElementById('adm-real-sf1').value = rb.sf1 || "";
+        document.getElementById('adm-real-sf2').value = rb.sf2 || "";
+        document.getElementById('adm-real-sf3').value = rb.sf3 || "";
+        document.getElementById('adm-real-sf4').value = rb.sf4 || "";
+        document.getElementById('adm-real-f1').value = rb.f1 || "";
+        document.getElementById('adm-real-f2').value = rb.f2 || "";
+        document.getElementById('adm-real-campeon').value = rb.campeon || "";
+
+        // Asegurar que el checkbox del admin refleje el estado real
+        if (document.getElementById('chk-bloquear-bonus')) {
+            document.getElementById('chk-bloquear-bonus').checked = datosApp.bonusBloqueado;
+        }
+
         const cont = document.getElementById('grid-resultados-reales');
         cont.innerHTML = datosApp.llaves.map((l, i) => `
             <div class="group-card">
@@ -504,18 +697,25 @@
                     <input type="number" id="adm-gB-${i}" value="${l.rGolesB}" class="score-box" placeholder="G">
                 </div>
                 <select id="adm-gan-${i}" style="margin-bottom:10px;">
-                    <option value="">- Ganador Oficial -</option>
+                    <option value="">- Ganador en Penales (Si hay empate) -</option>
                     <option value="A" ${l.rGanador === 'A' ? 'selected' : ''}>A (Local)</option>
                     <option value="B" ${l.rGanador === 'B' ? 'selected' : ''}>B (Visitante)</option>
                 </select>
-                <label><input type="checkbox" id="adm-lock-${i}" ${l.bloqueado ? 'checked' : ''}> 🔒 Bloqueado (Público no lo ve)</label>
+                <label><input type="checkbox" id="adm-lock-${i}" ${l.bloqueado ? 'checked' : ''}> 🔒 Bloqueado</label>
             </div>`).join('');
     }
 
-    function agregarPartidoAdmin() { datosApp.llaves.push({ id: datosApp.llaves.length, eqA:"", eqB:"", rGolesA:"", rGolesB:"", rGanador:"", bloqueado:false, fase:"Fase" }); generarCamposResultadosReales(); }
-    function eliminarPartidoAdmin() { if(datosApp.llaves.length>0 && confirm("¿Borrar último?")) { datosApp.llaves.pop(); generarCamposResultadosReales(); } }
-
     async function guardarResultadosReales() {
+        datosApp.resultadosBonus = {
+            sf1: document.getElementById('adm-real-sf1').value.trim(),
+            sf2: document.getElementById('adm-real-sf2').value.trim(),
+            sf3: document.getElementById('adm-real-sf3').value.trim(),
+            sf4: document.getElementById('adm-real-sf4').value.trim(),
+            f1: document.getElementById('adm-real-f1').value.trim(),
+            f2: document.getElementById('adm-real-f2').value.trim(),
+            campeon: document.getElementById('adm-real-campeon').value.trim()
+        };
+
         datosApp.llaves.forEach((l, i) => {
             l.fase = document.getElementById(`adm-fase-${i}`).value;
             l.eqA = document.getElementById(`adm-eqA-${i}`).value;
@@ -525,10 +725,23 @@
             l.rGanador = document.getElementById(`adm-gan-${i}`).value;
             l.bloqueado = document.getElementById(`adm-lock-${i}`).checked;
         });
+        
         await subirDatosALaNube();
-        alert("✅ Guardado");
+        alert("✅ Resultados Globales y Marcadores Guardados");
         irAPestaña('panel-posiciones');
     }
+
+    function loguearAdmin() {
+        if (document.getElementById('pass-admin').value === CONTRASEÑA_MAESTRA) {
+            document.querySelectorAll('.admin-only').forEach(e => e.style.display = 'inline-block');
+            document.getElementById('login-admin-box').style.display = 'none';
+            document.getElementById('logout-admin-box').style.display = 'block';
+        } else alert("❌ Error");
+    }
+    
+    function cerrarAdmin() { location.reload(); }
+    function agregarPartidoAdmin() { datosApp.llaves.push({ id: datosApp.llaves.length, eqA:"", eqB:"", rGolesA:"", rGolesB:"", rGanador:"", bloqueado:false, fase:"Fase" }); generarCamposResultadosReales(); }
+    function eliminarPartidoAdmin() { if(datosApp.llaves.length>0 && confirm("¿Borrar último?")) { datosApp.llaves.pop(); generarCamposResultadosReales(); } }
 
     function generarTablaGestionUsuarios() {
         document.getElementById('tabla-gestion-usuarios-body').innerHTML = datosApp.participantes.map(p => `
@@ -548,8 +761,69 @@
         await subirDatosALaNube();
         document.getElementById('btn-tab-registro').style.display = datosApp.registroOculto ? 'none' : 'inline-block';
     }
+    
+    function poblarSelectSimulador() {
+        const select = document.getElementById('simulador-select-partido');
+        if(!select) return;
+        let opciones = `<option value="">-- Toca aquí para elegir un Partido --</option>`;
+        datosApp.llaves.forEach((llave, i) => {
+            if(!llave.bloqueado) opciones += `<option value="${i}">[${llave.fase || 'Fase'}] ${llave.eqA || `Local (P${i+1})`} vs ${llave.eqB || `Visitante (P${i+1})`}</option>`;
+        });
+        select.innerHTML = opciones;
+    }
 
-    // Arranca la app asegurándose de que el navegador esté listo
+    function ejecutarSimulador() {
+        const index = document.getElementById('simulador-select-partido').value;
+        const resDiv = document.getElementById('simulador-resultados');
+        if (index === "") { resDiv.style.display = 'none'; return; }
+
+        const llave = datosApp.llaves[index];
+        let gA = document.getElementById('simulador-goles-a').value;
+        let gB = document.getElementById('simulador-goles-b').value;
+        let selectorGanador = document.getElementById('simulador-ganador');
+
+        selectorGanador.options[1].text = llave.eqA || "Local";
+        selectorGanador.options[2].text = llave.eqB || "Visitante";
+
+        if (gA === "" || gB === "") { resDiv.style.display = 'none'; return; }
+        
+        let nA = parseInt(gA), nB = parseInt(gB);
+        if (nA > nB) selectorGanador.value = "A";
+        else if (nA < nB) selectorGanador.value = "B";
+
+        let ganador = selectorGanador.value;
+        if (ganador === "") {
+            resDiv.style.display = 'block';
+            resDiv.innerHTML = `<div style="text-align:center; color:#d97706; font-weight:bold; padding:10px; background:white; border-radius:8px;">⚖️ Empate detectado. Selecciona manualmente quién ganaría.</div>`;
+            return;
+        }
+
+        let aciertosExactos = [], aciertosGanador = [];
+        datosApp.participantes.forEach(p => {
+            if(p.predicciones && p.predicciones[index]) {
+                let pA = parseInt(p.predicciones[index].pGolesA), pB = parseInt(p.predicciones[index].pGolesB);
+                
+                let pGanadorDeduzido = p.predicciones[index].pGanador || (pA > pB ? 'A' : (pB > pA ? 'B' : ''));
+                let aciertaGanador = (pGanadorDeduzido === ganador);
+                let aciertaMarcador = (pA === nA && pB === nB);
+
+                if (aciertaGanador && aciertaMarcador) aciertosExactos.push(p.nombre);
+                else if (aciertaGanador || aciertaMarcador) aciertosGanador.push(p.nombre);
+            }
+        });
+
+        resDiv.style.display = 'block';
+        resDiv.innerHTML = `
+            <div style="background: white; padding: 15px; border-radius: 8px; border-left: 5px solid #16a34a; margin-bottom: 10px;">
+                <strong style="color:#16a34a; font-size:15px; display:block; margin-bottom:8px;">🎯 Le atinan al Marcador Exacto (+3 pts):</strong>
+                <div>${aciertosExactos.length > 0 ? aciertosExactos.map(n => `<span class="badge-exacto">${n}</span>`).join('') : `<span style="font-size:13px; color:#94a3b8; font-style:italic;">Nadie</span>`}</div>
+            </div>
+            <div style="background: white; padding: 15px; border-radius: 8px; border-left: 5px solid #d97706;">
+                <strong style="color:#d97706; font-size:15px; display:block; margin-bottom:8px;">✅ Acertando solo quién avanza (+1 pt):</strong>
+                <div>${aciertosGanador.length > 0 ? aciertosGanador.map(n => `<span class="badge-parcial">${n}</span>`).join('') : `<span style="font-size:13px; color:#94a3b8; font-style:italic;">Nadie</span>`}</div>
+            </div>`;
+    }
+
     window.addEventListener("load", descargarDatosDeLaNube);
 </script>
 </body>
