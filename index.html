@@ -256,7 +256,7 @@
         llaves: [], 
         resultadosBonus: { sf1:"", sf2:"", sf3:"", sf4:"", f1:"", f2:"", campeon:"" },
         registroOculto: false,
-        bonusBloqueado: false // Agregada la variable del bloqueo
+        bonusBloqueado: false 
     };
 
     let userBonus = { sf1:"", sf2:"", sf3:"", sf4:"", f1:"", f2:"", campeon:"" };
@@ -277,7 +277,7 @@
             }));
         }
         if (typeof datosApp.registroOculto === 'undefined') datosApp.registroOculto = false;
-        if (typeof datosApp.bonusBloqueado === 'undefined') datosApp.bonusBloqueado = false; // Nos aseguramos de que exista
+        if (typeof datosApp.bonusBloqueado === 'undefined') datosApp.bonusBloqueado = false; 
     }
 
     function mostrarCargando(v) { document.getElementById('loading').style.display = v ? 'block' : 'none'; }
@@ -312,11 +312,10 @@
         mostrarCargando(false);
     }
 
-    // NUEVA FUNCIÓN PARA EL CANDADO DEL BONUS
     async function toggleBloqueoBonus() {
         datosApp.bonusBloqueado = document.getElementById('chk-bloquear-bonus').checked;
         await subirDatosALaNube();
-        renderBracketUI(); // Actualiza visualmente si estás en esa pestaña
+        renderBracketUI(); 
     }
 
     function irAPestaña(panelId) {
@@ -335,7 +334,7 @@
     }
 
     function selectTeamBonus(fase, value, matchId) {
-        if (datosApp.bonusBloqueado) return; // Si está bloqueado, no hace nada al hacer click
+        if (datosApp.bonusBloqueado) return; 
 
         if (fase === 'sf') {
             userBonus[`sf${matchId}`] = value;
@@ -352,10 +351,8 @@
     }
 
     function renderBracketUI() {
-        // Revisamos si el bonus está bloqueado
         let isBloqueado = datosApp.bonusBloqueado;
         
-        // Cambiamos el título si está bloqueado
         const tituloLlave = document.getElementById('titulo-llave-bonus');
         if (isBloqueado) {
             tituloLlave.innerHTML = '🏆 Llave de Predicciones (Bonus) <span style="color: #c62828; font-size: 14px; display: block; margin-top: 5px;">[🔒 SECCIÓN CERRADA]</span>';
@@ -367,7 +364,7 @@
         bracketBase.forEach((match, idx) => {
             let id = idx + 1;
             let sel = userBonus[`sf${id}`];
-            let attrLock = isBloqueado ? 'disabled' : ''; // Aplica el bloqueo visual a los botones
+            let attrLock = isBloqueado ? 'disabled' : ''; 
             
             htmlQF += `<div class="bracket-match">
                 <button type="button" class="bracket-btn ${sel === match[0] ? 'selected' : ''}" ${attrLock} onclick="selectTeamBonus('sf', '${match[0]}', ${id})">${match[0]}</button>
@@ -434,7 +431,7 @@
         }
     }
 
-    // --- NUEVA LÓGICA DE PUNTUACIÓN REVISADA ---
+    /* --- LÓGICA DE PUNTUACIÓN CORREGIDA --- */
     function calcularPuntosLlave(pred, llave) {
         if (!pred || llave.rGolesA === "" || llave.rGolesB === "") return 0;
         
@@ -445,12 +442,11 @@
 
         let aciertaMarcador = (pA === rA && pB === rB);
 
-        // Deduce el ganador basado en los goles si nadie usó el dropdown (ideal para los 90 min)
-        let realGanador = llave.rGanador || (rA > rB ? 'A' : (rB > rA ? 'B' : ''));
-        let predGanador = pred.pGanador || (pA > pB ? 'A' : (pB > pA ? 'B' : ''));
+        // CORRECCIÓN INTEGRADA: Solo se evalúa penales si los goles terminaron en empate
+        let realGanador = (rA === rB) ? llave.rGanador : (rA > rB ? 'A' : 'B');
+        let predGanador = (pA === pB) ? pred.pGanador : (pA > pB ? 'A' : 'B');
 
         let aciertaClasificado = false;
-        // Solo comprueba si se pudo deducir o seleccionar un ganador de ambos lados
         if (realGanador !== '' && predGanador !== '') {
             aciertaClasificado = (realGanador === predGanador);
         }
@@ -460,7 +456,7 @@
         return 0;
     }
 
-    // --- NUEVO SISTEMA DE AUDITORÍA DETALLADA ---
+    /* --- SISTEMA DE AUDITORÍA DETALLADA CORREGIDO --- */
     function obtenerRazonPuntos(pred, llave) {
         if (!pred || llave.rGolesA === "" || llave.rGolesB === "") return "<span style='color:#666;'>No hay datos suficientes para evaluar.</span>";
         
@@ -468,8 +464,10 @@
         let rA = parseInt(llave.rGolesA), rB = parseInt(llave.rGolesB);
 
         let aciertaMarcador = (pA === rA && pB === rB);
-        let realGanador = llave.rGanador || (rA > rB ? 'A' : (rB > rA ? 'B' : ''));
-        let predGanador = pred.pGanador || (pA > pB ? 'A' : (pB > pA ? 'B' : ''));
+        
+        // CORRECCIÓN INTEGRADA: Igualdad de condiciones para auditorías visuales
+        let realGanador = (rA === rB) ? llave.rGanador : (rA > rB ? 'A' : 'B');
+        let predGanador = (pA === pB) ? pred.pGanador : (pA > pB ? 'A' : 'B');
         
         let aciertaClasificado = false;
         if (realGanador !== '' && predGanador !== '') {
@@ -577,7 +575,7 @@
             const pred = (p.predicciones && p.predicciones[i]) ? p.predicciones[i] : { pGolesA: "-", pGolesB: "-", pGanador: "-" };
             
             const pts = calcularPuntosLlave(pred, llave);
-            const razonHTML = obtenerRazonPuntos(pred, llave); // Se llama al nuevo sistema de auditoría
+            const razonHTML = obtenerRazonPuntos(pred, llave); 
 
             let infoDesempate = "";
             if (pred.pGolesA !== "-" && pred.pGolesA === pred.pGolesB && pred.pGanador && pred.pGanador !== "-") {
@@ -637,9 +635,8 @@
         let nombre = document.getElementById('usuario-nombre-registro').value.trim();
         if (!nombre) return alert("⚠️ Ingresa tu nombre arriba.");
         
-        // Solo exige llenar el Bonus si NO está bloqueado
         if (!datosApp.bonusBloqueado) {
-            if (!userBonus.sf1 || !userBonus.sf2 || !userBonus.sf3 || !userBonus.sf4) return alert("⚠️ Selecciona los 4 semifinalistas en la Llave de Bonus.");
+            if (!userBonus.sf1 || !userBonus.sf2 || !userBonus.sf3 || !userBonus.sf4) return alert("⚠️ Selecciona los 4 semifinalistas in la Llave de Bonus.");
             if (!userBonus.f1 || !userBonus.f2) return alert("⚠️ Selecciona los 2 finalistas en la Llave de Bonus.");
             if (!userBonus.campeon) return alert("⚠️ Selecciona al Campeón en la Llave de Bonus.");
         }
@@ -680,7 +677,6 @@
         document.getElementById('adm-real-f2').value = rb.f2 || "";
         document.getElementById('adm-real-campeon').value = rb.campeon || "";
 
-        // Asegurar que el checkbox del admin refleje el estado real
         if (document.getElementById('chk-bloquear-bonus')) {
             document.getElementById('chk-bloquear-bonus').checked = datosApp.bonusBloqueado;
         }
@@ -803,7 +799,8 @@
             if(p.predicciones && p.predicciones[index]) {
                 let pA = parseInt(p.predicciones[index].pGolesA), pB = parseInt(p.predicciones[index].pGolesB);
                 
-                let pGanadorDeduzido = p.predicciones[index].pGanador || (pA > pB ? 'A' : (pB > pA ? 'B' : ''));
+                // CORRECCIÓN INTEGRADA: Corrección del bug de simulación en vivo
+                let pGanadorDeduzido = (pA === pB) ? p.predicciones[index].pGanador : (pA > pB ? 'A' : 'B');
                 let aciertaGanador = (pGanadorDeduzido === ganador);
                 let aciertaMarcador = (pA === nA && pB === nB);
 
