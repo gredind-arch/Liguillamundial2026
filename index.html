@@ -156,16 +156,13 @@
             <p style="text-align: center; font-size: 13px; color: #555;">Toca los equipos para definir su camino hasta la final. (Semis: 1 pt por acierto, 5 pts por los cuatro. Final: 3 pts por equipo. Campeón: 5 pts).</p>
             
             <div class="bracket-header" style="text-align:center; margin-top:20px;">1. Elige tus Semifinalistas</div>
-            <div class="bracket-row" id="ui-qf-row">
-                </div>
+            <div class="bracket-row" id="ui-qf-row"></div>
 
             <div class="bracket-header" style="text-align:center; margin-top:15px;">2. Elige tus Finalistas</div>
-            <div class="bracket-row" id="ui-sf-row">
-                </div>
+            <div class="bracket-row" id="ui-sf-row"></div>
 
             <div class="bracket-header" style="text-align:center; margin-top:15px;">3. Elige al Campeón</div>
-            <div class="bracket-row" id="ui-fin-row">
-                </div>
+            <div class="bracket-row" id="ui-fin-row"></div>
         </div>
 
         <h3 style="text-align: center; color: var(--primary); margin-top: 30px;">⚽ Marcadores 90 Minutos</h3>
@@ -431,52 +428,83 @@
         }
     }
 
-    /* --- LÓGICA DE PUNTUACIÓN CORREGIDA --- */
+    /* --- LÓGICA DE PUNTUACIÓN CORREGIDA 100% --- */
     function calcularPuntosLlave(pred, llave) {
         if (!pred || llave.rGolesA === "" || llave.rGolesB === "") return 0;
         
-        let pA = parseInt(pred.pGolesA), pB = parseInt(pred.pGolesB);
-        let rA = parseInt(llave.rGolesA), rB = parseInt(llave.rGolesB);
+        let pA = parseInt(pred.pGolesA);
+        let pB = parseInt(pred.pGolesB);
+        let rA = parseInt(llave.rGolesA);
+        let rB = parseInt(llave.rGolesB);
 
         if (isNaN(pA) || isNaN(pB) || isNaN(rA) || isNaN(rB)) return 0;
 
+        // 1. Evalúa únicamente si atinó a los goles (los 90 min)
         let aciertaMarcador = (pA === rA && pB === rB);
 
-        // CORRECCIÓN INTEGRADA: Solo se evalúa penales si los goles terminaron en empate
-        let realGanador = (rA === rB) ? llave.rGanador : (rA > rB ? 'A' : 'B');
-        let predGanador = (pA === pB) ? pred.pGanador : (pA > pB ? 'A' : 'B');
+        // 2. Determina quién avanzó realmente
+        let realGanador = "";
+        if (rA > rB) realGanador = 'A';
+        else if (rA < rB) realGanador = 'B';
+        else realGanador = llave.rGanador || "";
 
+        // 3. Determina a quién puso el usuario a avanzar
+        let predGanador = "";
+        if (pA > pB) predGanador = 'A';
+        else if (pA < pB) predGanador = 'B';
+        else predGanador = pred.pGanador || "";
+
+        // 4. Evalúa si atinó a quién avanzaba
         let aciertaClasificado = false;
-        if (realGanador !== '' && predGanador !== '') {
+        if (realGanador !== "" && predGanador !== "") {
             aciertaClasificado = (realGanador === predGanador);
         }
 
-        if (aciertaMarcador && aciertaClasificado) return 3;
-        else if (aciertaClasificado || aciertaMarcador) return 1;
-        return 0;
+        // 5. Repartición asegurada de puntos
+        if (aciertaMarcador && aciertaClasificado) {
+            return 3; // +3 Puntos: Atinó marcador exacto Y atinó al equipo que pasó
+        } else if (aciertaMarcador) {
+            return 1; // +1 Punto: Atinó el marcador exacto (Ej: 1-1) pero falló quién pasaba. SE ASEGURA EL PUNTO AQUÍ.
+        } else if (aciertaClasificado) {
+            return 1; // +1 Punto: Falló el marcador pero atinó quién pasaba.
+        }
+        
+        return 0; // Falló ambas cosas.
     }
 
     /* --- SISTEMA DE AUDITORÍA DETALLADA CORREGIDO --- */
     function obtenerRazonPuntos(pred, llave) {
         if (!pred || llave.rGolesA === "" || llave.rGolesB === "") return "<span style='color:#666;'>No hay datos suficientes para evaluar.</span>";
         
-        let pA = parseInt(pred.pGolesA), pB = parseInt(pred.pGolesB);
-        let rA = parseInt(llave.rGolesA), rB = parseInt(llave.rGolesB);
+        let pA = parseInt(pred.pGolesA);
+        let pB = parseInt(pred.pGolesB);
+        let rA = parseInt(llave.rGolesA);
+        let rB = parseInt(llave.rGolesB);
 
         let aciertaMarcador = (pA === rA && pB === rB);
         
-        // CORRECCIÓN INTEGRADA: Igualdad de condiciones para auditorías visuales
-        let realGanador = (rA === rB) ? llave.rGanador : (rA > rB ? 'A' : 'B');
-        let predGanador = (pA === pB) ? pred.pGanador : (pA > pB ? 'A' : 'B');
+        let realGanador = "";
+        if (rA > rB) realGanador = 'A';
+        else if (rA < rB) realGanador = 'B';
+        else realGanador = llave.rGanador || "";
+
+        let predGanador = "";
+        if (pA > pB) predGanador = 'A';
+        else if (pA < pB) predGanador = 'B';
+        else predGanador = pred.pGanador || "";
         
         let aciertaClasificado = false;
-        if (realGanador !== '' && predGanador !== '') {
+        if (realGanador !== "" && predGanador !== "") {
             aciertaClasificado = (realGanador === predGanador);
         }
 
-        if (aciertaMarcador && aciertaClasificado) return "<span style='color:#16a34a; font-weight:bold;'>✅ +3 pts: Marcador exacto y equipo clasificado correctos.</span>";
-        else if (aciertaMarcador) return "<span style='color:#d97706; font-weight:bold;'>⚠️ +1 pt: Marcador exacto (pero falló el equipo que avanzaba en penales).</span>";
-        else if (aciertaClasificado) return "<span style='color:#d97706; font-weight:bold;'>✅ +1 pt: Acertó el equipo clasificado (marcador incorrecto).</span>";
+        if (aciertaMarcador && aciertaClasificado) {
+            return "<span style='color:#16a34a; font-weight:bold;'>✅ +3 pts: Marcador exacto y equipo clasificado correctos.</span>";
+        } else if (aciertaMarcador) {
+            return "<span style='color:#d97706; font-weight:bold;'>⚠️ +1 pt: Marcador exacto en 90 min (pero falló el equipo que avanzaba).</span>";
+        } else if (aciertaClasificado) {
+            return "<span style='color:#d97706; font-weight:bold;'>✅ +1 pt: Acertó el equipo clasificado (marcador incorrecto).</span>";
+        }
         
         return "<span style='color:#c62828; font-weight:bold;'>❌ 0 pts: No acertó el marcador ni el equipo clasificado.</span>";
     }
@@ -797,11 +825,15 @@
         let aciertosExactos = [], aciertosGanador = [];
         datosApp.participantes.forEach(p => {
             if(p.predicciones && p.predicciones[index]) {
-                let pA = parseInt(p.predicciones[index].pGolesA), pB = parseInt(p.predicciones[index].pGolesB);
+                let pA = parseInt(p.predicciones[index].pGolesA);
+                let pB = parseInt(p.predicciones[index].pGolesB);
                 
-                // CORRECCIÓN INTEGRADA: Corrección del bug de simulación en vivo
-                let pGanadorDeduzido = (pA === pB) ? p.predicciones[index].pGanador : (pA > pB ? 'A' : 'B');
-                let aciertaGanador = (pGanadorDeduzido === ganador);
+                let pGanadorDeduzido = "";
+                if (pA > pB) pGanadorDeduzido = 'A';
+                else if (pA < pB) pGanadorDeduzido = 'B';
+                else pGanadorDeduzido = p.predicciones[index].pGanador || "";
+                
+                let aciertaGanador = (pGanadorDeduzido !== "" && pGanadorDeduzido === ganador);
                 let aciertaMarcador = (pA === nA && pB === nB);
 
                 if (aciertaGanador && aciertaMarcador) aciertosExactos.push(p.nombre);
